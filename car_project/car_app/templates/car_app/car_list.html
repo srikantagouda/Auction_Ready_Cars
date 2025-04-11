@@ -1,0 +1,16 @@
+{% extends 'car_app/base.html' %}
+
+ {% block content %}
+    <h1>Car List</h1>
+    <form method="get" action=".">
+        <label for="make">Filter by make:</label>
+        <input type="text" id="make" name="make">
+        <button type="submit">Filter</button>
+    </form>
+    <ul>
+        {% for car in context.cars %}
+            <li><a href="{% url 'car_detail' car.car_id %}">{{ car.make }} {{ car.model }}</a></li>
+        {% endfor %}
+    </ul>
+    
+ {% endblock %}

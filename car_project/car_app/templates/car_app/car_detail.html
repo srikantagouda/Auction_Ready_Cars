@@ -1,0 +1,17 @@
+{% extends 'car_app/base.html' %}
+
+{% block title %}{{ car.make }} {{ car.model }}{% endblock %}
+{% block content %}
+
+<h2>{{ car.make }} {{ car.model }}</h2>
+<p>Year: {{ car.year }}</p>
+<p>Engine Size: {{ car.engine_size }} cc</p>
+<p>Horsepower: {{ car.horsepower }} HP</p>
+<p>Price: ${{ car.price }}</p>
+<h3>Images</h3>
+<ul>
+    {% for image in images %}
+        <li><img src="/media/{{ image }}" alt="Car Image"></li>
+    {% endfor %}
+</ul>
+{% endblock %}
