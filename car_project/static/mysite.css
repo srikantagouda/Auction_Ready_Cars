@@ -1,0 +1,44 @@
+.oc-table {
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: normal;
+    border: none;
+    border-collapse: collapse;
+    background-color: white;
+    width: 100%;
+}
+
+    .oc-table td,
+    .oc-table th {
+        text-align: center;
+        padding: 5px;
+    }
+
+    .oc-table td {
+        border: 1px solid #f8f8f8;
+        font-size: 12px;
+    }
+
+    .oc-table thead th {
+        color: #ffffff;
+        background: #4FC3A1;
+    }
+
+        .oc-table thead th:nth-child(odd) {
+            color: #ffffff;
+            background: #324960;
+        }
+
+    .oc-table tr:nth-child(even) {
+        background: #F8F8F8;
+    }
+
+    tr:hover {
+        background-color: lightblue !important; /* Light grey background on hover */
+        transition: background-color 0.3s ease; /* Smooth transition */
+        cursor: pointer; 
+    }
+
+    .selected-car{
+        background-color: lightblue !important;
+    }

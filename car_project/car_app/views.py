@@ -13,7 +13,7 @@ def car_list(request):
     else:
         cars = Car.objects.all()
     
-    paginator = Paginator(cars, 10)
+    paginator = Paginator(cars, 20)
     page_number = request.GET.get('page')
 
     if page_number == None:
