@@ -42,3 +42,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+$(document).ready(function() {
+    $('.js-example-basic-single').multiSelect();
+
+});
+
+function showFullText(cell){
+    cell.classList.toggle("expanded");
+}

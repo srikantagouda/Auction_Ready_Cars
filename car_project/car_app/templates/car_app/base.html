@@ -9,6 +9,8 @@
     <title>{% block title %}Car App{% endblock %}</title>
     <!-- Bootstrap CSS -->
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'multi-select/multi-select-styles.css' %}" rel="stylesheet" />
+
     <link href="{% static 'mysite.css' %}" rel="stylesheet">
 
     <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.ico' %}">
@@ -35,7 +37,7 @@
                         aria-label="Search">
                 </form> -->
 
-                <div class="dropdown text-end">
+                <!-- <div class="dropdown text-end">
                     <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle"
                         data-bs-toggle="dropdown" aria-expanded="false">
                         <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
@@ -49,7 +51,8 @@
                         </li>
                         <li><a class="dropdown-item" href="#">Sign out</a></li>
                     </ul>
-                </div>
+                </div> -->
+
             </div>
         </div>
     </header>
@@ -66,6 +69,7 @@
     <script src="{% static 'js/jquery/jquery-3.6.0.min.js' %}"></script>
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js"></script> -->
     <script src="{% static 'js/bootstrap/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'multi-select/jquery.multi-select.min.js' %}"></script>
     <script src="{% static 'js/myscript.js' %}"></script>
 
 </body>

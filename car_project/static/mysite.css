@@ -33,12 +33,27 @@
         background: #F8F8F8;
     }
 
-    tr:hover {
+    .table_filter tr:hover {
         background-color: lightblue !important; /* Light grey background on hover */
         transition: background-color 0.3s ease; /* Smooth transition */
         cursor: pointer; 
     }
 
-    .selected-car{
+    .table_filter .selected-car{
         background-color: lightblue !important;
+    }
+
+    .truncate-text{
+        max-width: 50px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        cursor: pointer;
+    }
+
+    
+    .truncate-text.expanded{
+        overflow: visible;
+        text-overflow: unset;
+        white-space: normal;
     }
