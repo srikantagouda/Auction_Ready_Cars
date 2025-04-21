@@ -44,6 +44,7 @@
     }
 
     .truncate-text{
+        text-align: left !important;
         max-width: 50px;
         overflow: hidden;
         text-overflow: ellipsis;

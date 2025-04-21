@@ -1,3 +1,4 @@
+import json
 from django.core.paginator import Paginator
 from django.shortcuts import render, HttpResponse
 from .models import Car  # , Image
@@ -21,9 +22,12 @@ def car_list(request):
         cars = cars.filter(fuel_type__in=selected_fuel_types)
 
     #Get Unique items for the filter select.
-    brand_column = Car.objects.values_list('brand', flat=True).distinct()
-    model_column = Car.objects.values_list('model', flat=True).distinct()
+    brand_column = Car.objects.values_list('brand', flat=True).distinct().order_by('brand')
+    model_column = Car.objects.values_list('model', flat=True).distinct().order_by('model')
     fuel_type_column = Car.objects.values_list('fuel_type', flat=True).distinct()
+
+    car_data = list(Car.objects.values('brand', 'model', 'fuel_type').distinct().order_by('brand', 'model'))
+    car_data_json = json.dumps(car_data)
 
     paginator = Paginator(cars, 100)
     page_number = request.GET.get('page')
@@ -46,6 +50,7 @@ def car_list(request):
         'selected_brands' : selected_brands,
         'selected_models' : selected_models,
         'selected_fuel_types' : selected_fuel_types,
+        'car_data_json' : car_data_json,
 
         'get_params' : get_params.urlencode()
     })

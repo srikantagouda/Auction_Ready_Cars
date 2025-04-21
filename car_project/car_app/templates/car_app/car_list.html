@@ -37,7 +37,7 @@
             </select>
           </div>
           <div class="col-auto">
-            <label for="filterby_fuel_type" class="form-label">Select Brands</label>
+            <label for="filterby_fuel_type" class="form-label">Select Fuel Type</label>
             <select class="js-example-basic-single" name="carfueltypes" multiple="multiple" id="filterby_fuel_type">
               {% for fueltype in fuel_type_column %}
               <option value="{{fueltype}}" {% if fueltype in selected_fuel_types %} selected {% endif %}>{{fueltype}}
@@ -80,7 +80,7 @@
               <th style="width: 50px;">Fuel Type</th>
               <th style="width: 50px;">Horsepower</th>
               <th style="width: 50px;">Price</th> -->
-              <th style="width: 9%;">Date</th>
+              <th style="width: 20px;">Date</th>
               <th style="width: 1%;">Registrering</th>
               <th style="width: 1%;">Brand</th>
               <th style="width: 1%;">Model</th>
@@ -107,12 +107,12 @@
           <tbody class="table_filter">
             {% for car in page_obj %}
             <tr id="carid_{{ car.car_id }}" class="">
-              <td>{{ car.date }}</td>
-              <td>{{ car.registrering }}</td>
+              <td class="text-nowrap">{{ car.date|date:"M d, Y" }}</td>
+              <td class="text-nowrap">{{ car.registrering|date:"M d, Y" }}</td>
               <td>{{ car.brand }}</td>
               <td>{{ car.model }}</td>
               <td>{{ car.horsepower }}</td>
-              <td>{{ car.fuel_Type }}</td>
+              <td>{{ car.fuel_type }}</td>
               <td>{{ car.transimision }}</td>
               <td>{{ car.kilometer }}</td>
               <td>{{ car.engine_size }}</td>
@@ -122,11 +122,11 @@
               <td>{{ car.koretype }}</td>
               <td>{{ car.kosmetisk }}</td>
               <td>{{ car.mekanisk }}</td>
-              <td class="truncate-text" onclick="showFullText(this)">{{ car.kommentar }}</td>
+              <td class="truncate-text" onclick="showFullText(this)">{{ car.kommentar }} </td>
               <td>{{ car.registeringsafgift }}</td>
               <td>{{ car.tax_moms_or_inkl }}</td>
               <td>{{ car.stelnummer }}</td>
-              <td>&#8364; {{ car.price }}</td>
+              <td class="text-nowrap">&#8364; {{ car.price }}</td>
               <td hidden><input type="text" hidden id="carimages_{{ car.car_id }}" value="{{ car.image_names }}"></td>
 
             </tr>
@@ -192,7 +192,7 @@
   </div>
 
   <div class="col">
-
+    <textarea id="carDataJson" style="display: none;">{{ car_data_json|safe }}</textarea>
     <div class="card">
       <div class="card-header bg-info">
         Car Images
@@ -206,6 +206,54 @@
 
 </div>
 
+{% endblock %}
 
+
+{% block extra_js %}
+<script>
+
+  const carDataRaw = $('#carDataJson').val();
+  const carData = JSON.parse(carDataRaw);
+
+  $(document).ready(function () {
+
+    // Fill brand dropdown
+    const brands = [...new Set(carData.map(item => item.brand))];
+    brands.forEach(b => $('#filterby_brand').append(`<option value="${b}">${b}</option>`));
+
+    $('#filterby_brand').on('change', function () {
+      const selectedBrands = $(this).val();
+      const filteredModels = carData
+        .filter(car => selectedBrands.includes(car.brand))
+        .map(car => car.model);
+
+      const uniqueModels = [...new Set(filteredModels)];
+      $('#filterby_model').html('');
+
+      uniqueModels.forEach(m => $('#filterby_model').append(`<option value="${m}">${m}</option>`));
+
+      $('#filterby_model').trigger('change');
+
+    });
+
+    $('#filterby_model').on('change', function () {
+
+      const selectedBrands = $('#filterby_brand').val();
+      const selectedModels = $(this).val();
+      const filteredFuelTypes = carData
+        .filter(car => selectedBrands.includes(car.brand) && selectedModels.includes(car.model))
+        .map(car => car.fuel_type);
+
+      const uniqueFuels = [...new Set(filteredFuelTypes)];
+
+      $('#filterby_fuel_type').html('');
+
+      uniqueFuels.forEach(f => $('#filterby_fuel_type').append(`<option value="${f}">${f}</option>`));
+
+    });
+
+  });
+
+</script>
 
 {% endblock %}

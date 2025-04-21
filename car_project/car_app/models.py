@@ -25,7 +25,9 @@ class Car(models.Model):
     kosmetisk = models.IntegerField(null=True, blank=True)
 
     mekanisk = models.CharField(max_length=255, null=True, blank=True)
-    kommentar = models.CharField(max_length=255, null=True, blank=True)
+    
+    kommentar = models.TextField(null=True, blank=True)
+
     registeringsafgift = models.CharField(max_length=255, null=True, blank=True)
     tax_moms_or_inkl = models.CharField(max_length=255, null=True, blank=True)
     stelnummer = models.CharField(max_length=255, null=True, blank=True)
