@@ -1,16 +1,36 @@
 import json
+
+from datetime import datetime
+
 from django.core.paginator import Paginator
 from django.shortcuts import render, HttpResponse
 from .models import Car  # , Image
 
 def car_list(request):
-
+    
+    #return HttpResponse(request)
     #Get Selected Filters.
     selected_brands = request.GET.getlist('carbrands')
-
-    #return HttpResponse(selected_brands)
     selected_models = request.GET.getlist('carmodels')
     selected_fuel_types = request.GET.getlist('carfueltypes')
+    selected_transimisions = request.GET.getlist('cartransimisions')
+    
+    date_from = request.GET.get('filterby_datefrom')
+    date_to = request.GET.get('filterby_dateto')
+    
+# Convert the date strings to datetime objects
+    if date_from:
+        date_from = datetime.strptime(date_from, '%Y-%m-%d').date()
+    if date_to:
+        date_to = datetime.strptime(date_to, '%Y-%m-%d').date()
+
+    selected_km_from = request.GET.get('filterby_kmfrom')
+    selected_km_to = request.GET.get('filterby_kmto')
+
+    if selected_km_from:
+        selected_km_from = int(selected_km_from)
+    if selected_km_to:
+         selected_km_to = int(selected_km_to)
 
     cars = Car.objects.all()
     
@@ -20,14 +40,39 @@ def car_list(request):
         cars = cars.filter(model__in=selected_models)
     if selected_fuel_types:
         cars = cars.filter(fuel_type__in=selected_fuel_types)
+    if selected_transimisions:
+        cars = cars.filter(transimision__in=selected_transimisions)
+    
+    if date_from and date_to:
+        cars = cars.filter(date__gte=date_from, date__lte=date_to)
+    elif date_from:
+        cars = cars.filter(date__gte=date_from)
+    elif date_to:
+        cars = cars.filter(date__lte=date_to)
+
+    if selected_km_from and selected_km_to:
+        cars = cars.filter(kilometer__gte=selected_km_from, kilometer__lte=selected_km_to)
+    elif selected_km_from:
+        cars = cars.filter(kilometer__gte=selected_km_from)
+    elif selected_km_to:
+        cars = cars.filter(kilometer__lte=selected_km_to)
+
+        # Assuming 'cccc' is the value you want to compare against
+    #cars = cars.filter(other__in=selected_others, column_name__gte=cccc)
+
 
     #Get Unique items for the filter select.
-    brand_column = Car.objects.values_list('brand', flat=True).distinct().order_by('brand')
-    model_column = Car.objects.values_list('model', flat=True).distinct().order_by('model')
-    fuel_type_column = Car.objects.values_list('fuel_type', flat=True).distinct()
+    #brand_column = Car.objects.values_list('brand', flat=True).distinct().order_by('brand')
+    #model_column = Car.objects.values_list('model', flat=True).distinct().order_by('model')
+    #fuel_type_column = Car.objects.values_list('fuel_type', flat=True).distinct()
 
-    car_data = list(Car.objects.values('brand', 'model', 'fuel_type').distinct().order_by('brand', 'model'))
+    car_data = list(Car.objects.values('brand', 'model', 'fuel_type','transimision').distinct().order_by('brand', 'model'))
     car_data_json = json.dumps(car_data)
+
+    selected_brands = json.dumps(selected_brands)
+    selected_models = json.dumps(selected_models)
+    selected_fuel_types = json.dumps(selected_fuel_types)
+    selected_transimisions = json.dumps(selected_transimisions)
 
     paginator = Paginator(cars, 100)
     page_number = request.GET.get('page')
@@ -44,13 +89,21 @@ def car_list(request):
     return render(request, 'car_app/car_list.html',{
         'cars': cars,
         'page_obj': page_obj,
-        'brand_column' : brand_column,
-        'model_column' : model_column,
-        'fuel_type_column' : fuel_type_column,
+        #'brand_column' : brand_column,
+        #'model_column' : model_column,
+        #'fuel_type_column' : fuel_type_column,
+
         'selected_brands' : selected_brands,
         'selected_models' : selected_models,
         'selected_fuel_types' : selected_fuel_types,
+        'selected_transimisions' : selected_transimisions,
+        
         'car_data_json' : car_data_json,
+
+        'selected_km_from' : request.GET.get('filterby_kmfrom',''),
+        'selected_km_to' : request.GET.get('filterby_kmto',''),
+        'selected_date_from': request.GET.get('filterby_datefrom',''),
+        'selected_date_to':request.GET.get('filterby_dateto',''),
 
         'get_params' : get_params.urlencode()
     })

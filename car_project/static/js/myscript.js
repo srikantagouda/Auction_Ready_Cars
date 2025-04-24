@@ -43,10 +43,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-$(document).ready(function() {
-    $('.js-example-basic-single').multiSelect();
-
-});
+// $(document).ready(function() {
+//     $('.filter_cars').multiSelect();
+// });
 
 function showFullText(cell){
     cell.classList.toggle("expanded");

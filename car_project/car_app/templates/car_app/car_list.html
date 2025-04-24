@@ -2,6 +2,7 @@
 {% load custom_filters %}
 
 {% block content %}
+
 <div class="row align-items-start">
 
   <div class="col-8">
@@ -9,67 +10,19 @@
     <div class="card">
 
       <div class="card-header bg-info d-flex justify-content-between align-items-center">
-        <h5 class="p-0 m-0"> All Car List </h5>
-        <div class="d-flex align-items-center">
-          <input id="searchbox" type="search" class="form-control form-control-sm" placeholder="Search..."
-            aria-label="Search">
-        </div>
+        <a class="btn btn-primary me-2" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button"
+          aria-controls="offcanvasExample">
+          &#9776; <!-- Unicode for three horizontal lines --> Apply Filter
+        </a>
+        <h5 class="p-0 m-0">All Car List</h5>
+        <!-- <div class="d-flex align-items-center">
+            <input id="searchbox" type="search" class="form-control form-control-sm" placeholder="Search..." aria-label="Search">
+        </div> -->
       </div>
-
-      <div class="card-body p-1">
-        <form class="row g-3" method="get" id="filter-car-list">
-          <div class="col-auto">
-            <label for="filterby_brand" class="form-label">Select Brands</label>
-            <select class="js-example-basic-single" name="carbrands" multiple="multiple" id="filterby_brand">
-
-              {% for brand in brand_column %}
-              <option value="{{brand}}" {% if brand in selected_brands %} selected {% endif %}>{{brand}}</option>
-              {% endfor %}
-
-            </select>
-          </div>
-          <div class="col-auto">
-            <label for="filterby_model" class="form-label">Select Model</label>
-            <select class="js-example-basic-single" name="carmodels" multiple="multiple" id="filterby_model">
-              {% for model in model_column %}
-              <option value="{{model}}" {% if model in selected_models %} selected {% endif %}>{{model}}</option>
-              {% endfor %}
-            </select>
-          </div>
-          <div class="col-auto">
-            <label for="filterby_fuel_type" class="form-label">Select Fuel Type</label>
-            <select class="js-example-basic-single" name="carfueltypes" multiple="multiple" id="filterby_fuel_type">
-              {% for fueltype in fuel_type_column %}
-              <option value="{{fueltype}}" {% if fueltype in selected_fuel_types %} selected {% endif %}>{{fueltype}}
-              </option>
-              {% endfor %}
-            </select>
-          </div>
-          <div class="col-auto">
-            <button type="submit" class="btn btn-primary btn-sm">Filter Data</button>
-          </div>
-          <div class="col-auto">
-            <a href="{% url 'car_list' %}" class="btn btn-warning btn-sm">Clear Filter</a>
-
-          </div>
-        </form>
-
-
-        <!-- Brand, Model, Fuel Type -->
-
-
-
-
-
-      </div>
-
-
-
-
 
       <div class="card-body p-0"
-        style="min-height:calc(100vh - 300px);max-height:calc(100vh - 300px);overflow-y: auto;">
-        <table class="oc-table">
+        style="min-height:calc(100vh - 350px);max-height:calc(100vh - 350px);overflow-y: auto;">
+        <table class="oc-table" style="min-height:200px">
           <thead>
             <tr>
               <!-- <th>car_id</th> -->
@@ -105,6 +58,7 @@
           </thead>
 
           <tbody class="table_filter">
+            {% if page_obj.object_list %}
             {% for car in page_obj %}
             <tr id="carid_{{ car.car_id }}" class="">
               <td class="text-nowrap">{{ car.date|date:"M d, Y" }}</td>
@@ -132,6 +86,13 @@
             </tr>
 
             {% endfor %}
+            {% else %}
+            <tr>
+              <td colspan="20" style="font-size: 20px;">No cars found.</td>
+            </tr>
+
+
+            {% endif %}
 
 
           </tbody>
@@ -142,6 +103,7 @@
 
 
       <div class="card-body pb-0">
+        {% if page_obj.paginator.num_pages > 1 %}
         <nav aria-label="Page navigation example">
           <ul class="pagination">
             {% if page_obj.has_previous %}
@@ -182,8 +144,9 @@
             {% endif %}
           </ul>
         </nav>
-
+        {% endif %}
       </div>
+
 
 
 
@@ -192,12 +155,11 @@
   </div>
 
   <div class="col">
-    <textarea id="carDataJson" style="display: none;">{{ car_data_json|safe }}</textarea>
     <div class="card">
       <div class="card-header bg-info">
         Car Images
       </div>
-      <div class="card-body p-1 overflow-auto" style="max-height:calc(100vh - 224px)" id="selected_car_images">
+      <div class="card-body p-1 overflow-auto" style="max-height:calc(100vh - 180px)" id="selected_car_images">
         <h5 id="all_image_list_header" class="card-title">Click a car to view the Car Images</h5>
       </div>
     </div>
@@ -206,50 +168,276 @@
 
 </div>
 
+
+<div class="offcanvas offcanvas-start custom-offcanvas-width" tabindex="-1" id="offcanvasExample"
+  aria-labelledby="offcanvasExampleLabel">
+  <div class="offcanvas-header bg-primary text-white">
+    <h5 class="offcanvas-title" id="offcanvasExampleLabel">Filter Options</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <form id="filter-form" method="get">
+      <div class="mb-3">
+        <label for="filterby_datefrom" class="form-label">Date From:</label>
+        <input type="date" class="form-control form-control-sm" id="filterby_datefrom" name="filterby_datefrom"
+          value="{{ selected_date_from }}">
+      </div>
+      <div class="mb-3">
+        <label for="filterby_dateto" class="form-label">Date To:</label>
+        <input type="date" class="form-control form-control-sm" id="filterby_dateto" name="filterby_dateto"
+          value="{{ selected_date_to }}">
+      </div>
+
+      <div class="">
+        <label for="filterby_brand" class="form-label">Select Brands:</label>
+      </div>
+      <div class="mb-3">
+        <select class="form-select filter_cars" name="carbrands" multiple="multiple" id="filterby_brand">
+          {% for brand in brand_column %}
+          <option value="{{brand}}" {% if brand in selected_brands %} selected {% endif %}>{{brand}}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="">
+        <label for="filterby_model" class="form-label">Select Model:</label>
+      </div>
+      <div class="mb-3">
+        <select class="form-select filter_cars" name="carmodels" multiple="multiple" id="filterby_model">
+
+        </select>
+      </div>
+
+      <div class="">
+        <label for="filterby_fuel_type" class="form-label">Select Fuel Type:</label>
+      </div>
+      <div class="mb-3">
+        <select class="form-select filter_cars" name="carfueltypes" multiple="multiple" id="filterby_fuel_type">
+
+        </select>
+      </div>
+
+      <div class="">
+        <label for="filterby_transimision" class="form-label">Select Transimision:</label>
+      </div>
+      <div class="mb-3">
+        <select class="form-select filter_cars" name="cartransimisions" multiple="multiple" id="filterby_transimision">
+
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label for="filterby_kmfrom" class="form-label">KM From:</label>
+        <input type="text" class="form-control form-control-sm" id="filterby_kmfrom" name="filterby_kmfrom"
+          value="{{ selected_km_from }}">
+      </div>
+      <div class="mb-3">
+        <label for="filterby_kmto" class="form-label">IKM To:</label>
+        <input type="number" class="form-control form-control-sm" id="filterby_kmto" name="filterby_kmto"
+          value="{{ selected_km_to }}">
+      </div>
+
+
+      <div class="d-flex justify-content-between">
+        <a href="{% url 'car_list' %}" class="btn btn-warning btn-sm">Clear Filter</a>
+
+        <button type="submit" class="btn btn-primary btn-sm">Apply Filter</button>
+
+      </div>
+    </form>
+  </div>
+</div>
+
+<div hidden>
+  <textarea id="carDataJson" style="display: none;">{{ car_data_json|safe }}</textarea>
+  <textarea id="selectedBrandsJson" style="display: none;">{{ selected_brands|safe }}</textarea>
+  <textarea id="selectedModelsJson" style="display: none;">{{ selected_models|safe }}</textarea>
+  <textarea id="selectedFuelsJson" style="display: none;">{{ selected_fuel_types|safe }}</textarea>
+  <textarea id="selectedTransJson" style="display: none;">{{ selected_transimisions|safe }}</textarea>
+</div>
+
 {% endblock %}
 
 
 {% block extra_js %}
+
 <script>
 
-  const carDataRaw = $('#carDataJson').val();
-  const carData = JSON.parse(carDataRaw);
+
+
+
 
   $(document).ready(function () {
 
-    // Fill brand dropdown
-    const brands = [...new Set(carData.map(item => item.brand))];
-    brands.forEach(b => $('#filterby_brand').append(`<option value="${b}">${b}</option>`));
+    const carData = JSON.parse($('#carDataJson').val());
+    const allBrands = [...new Set(carData.map(c => c.brand))];
+    const selectedBrands = JSON.parse($('#selectedBrandsJson').val());
+
+    function initFilterByBrand() {
+      const filterSelect = $('#filterby_brand');
+      filterSelect.html('');
+
+      allBrands.forEach(brand => {
+        const isSelected = selectedBrands.includes(brand) ? 'selected' : '';
+        filterSelect.append(`<option value="${brand}" ${isSelected}>${brand}</option>`);
+      });
+
+      $('#filterby_brand').multiSelect('unload');
+      $('#filterby_brand').multiSelect();
+    }
+    initFilterByBrand();
+    //------------------------------------------------------------------------------------
+
+    const selectedModels = JSON.parse($('#selectedModelsJson').val());
+
+    function initFilterbyModel() {
+      const relatedModels = carData
+        .filter(car => selectedBrands.includes(car.brand))
+        .map(car => car.model);
+
+      const uniqueModels = [...new Set(relatedModels)];
+      const $modelSelect = $('#filterby_model');
+
+      $('#filterby_fuel_type').html('');
+      $modelSelect.html(''); // Clear previous options
+
+      uniqueModels.forEach(model => {
+        const isSelected = selectedModels.includes(model) ? 'selected' : '';
+        $modelSelect.append(`<option value="${model}" ${isSelected}>${model}</option>`);
+      });
+
+      $('#filterby_model').multiSelect('unload');
+      $('#filterby_model').multiSelect();
+    }
+    initFilterbyModel();
+    //------------------------------------------------------------------------------------
+
+
+    const selectedFuels = JSON.parse($('#selectedFuelsJson').val());
+    function updateFuelTypes() {
+
+      // Filter car data based on selected brands and models
+      const relatedFuels = carData
+        .filter(car =>
+          selectedBrands.includes(car.brand) &&
+          selectedModels.includes(car.model)
+        )
+        .map(car => car.fuel_type);
+
+      const uniqueFuels = [...new Set(relatedFuels)];
+
+      const $fuelSelect = $('#filterby_fuel_type');
+      $fuelSelect.html(''); // Clear previous options
+
+      // Append new options
+      uniqueFuels.forEach(fuel => {
+        const isSelected = selectedFuels.includes(fuel) ? 'selected' : '';
+        $fuelSelect.append(`<option value="${fuel}" ${isSelected}>${fuel}</option>`);
+      });
+
+      // Rebuild or reinit multiselect
+      $('#filterby_fuel_type').multiSelect('unload');
+      $('#filterby_fuel_type').multiSelect();
+    }
+    updateFuelTypes();
+    //------------------------------------------------------------------------------------
+
+    const selectedTrans = JSON.parse($('#selectedTransJson').val());
+    function updateTransmision() {
+
+      // Filter car data based on selected brands and models
+      const relatedTrans = carData
+        .filter(car =>
+          selectedBrands.includes(car.brand) &&
+          selectedModels.includes(car.model) &&
+          selectedFuels.includes(car.fuel_type)
+        )
+        .map(car => car.transimision);
+
+      const uniqueTrans = [...new Set(relatedTrans)];
+
+      const $transSelect = $('#filterby_transimision');
+      $transSelect.html(''); // Clear previous options
+
+      // Append new options
+      uniqueTrans.forEach(trans => {
+        const isSelected = selectedTrans.includes(trans) ? 'selected' : '';
+        $transSelect.append(`<option value="${trans}" ${isSelected}>${trans}</option>`);
+      });
+
+      // Rebuild or reinit multiselect
+      $('#filterby_transimision').multiSelect('unload');
+      $('#filterby_transimision').multiSelect();
+    }
+    updateTransmision();
+    //------------------------------------------------------------------------------------
 
     $('#filterby_brand').on('change', function () {
-      const selectedBrands = $(this).val();
+      const NewselectedBrands = $(this).val();
       const filteredModels = carData
-        .filter(car => selectedBrands.includes(car.brand))
+        .filter(car => NewselectedBrands.includes(car.brand))
         .map(car => car.model);
 
       const uniqueModels = [...new Set(filteredModels)];
       $('#filterby_model').html('');
+      $('#filterby_fuel_type').html('');
+      $('#filterby_transimision').html('');
 
       uniqueModels.forEach(m => $('#filterby_model').append(`<option value="${m}">${m}</option>`));
 
+      $('#filterby_fuel_type').multiSelect('unload');
+      $('#filterby_fuel_type').multiSelect();
+      $('#filterby_transimision').multiSelect('unload');
+      $('#filterby_transimision').multiSelect();
+
       $('#filterby_model').trigger('change');
+      $('#filterby_fuel_type').trigger('change');
+      $('#filterby_transimision').trigger('change');
 
     });
 
-    $('#filterby_model').on('change', function () {
+    //------------------------------------------------------------------------------------
 
-      const selectedBrands = $('#filterby_brand').val();
-      const selectedModels = $(this).val();
-      const filteredFuelTypes = carData
-        .filter(car => selectedBrands.includes(car.brand) && selectedModels.includes(car.model))
+    $('#filterby_model').on('change', function () {
+      const NewselectedBrands = $('#filterby_brand').val();
+      const Newselectedmodels = $(this).val();
+
+      const filteredFueltypes = carData
+        .filter(car => Newselectedmodels.includes(car.model) && NewselectedBrands.includes(car.brand))
         .map(car => car.fuel_type);
 
-      const uniqueFuels = [...new Set(filteredFuelTypes)];
-
+      const uniqueFueltypes = [...new Set(filteredFueltypes)];
       $('#filterby_fuel_type').html('');
 
-      uniqueFuels.forEach(f => $('#filterby_fuel_type').append(`<option value="${f}">${f}</option>`));
+      uniqueFueltypes.forEach(m => $('#filterby_fuel_type').append(`<option value="${m}">${m}</option>`));
 
+      $('#filterby_fuel_type').multiSelect('unload');
+      $('#filterby_fuel_type').multiSelect();
+
+
+      $('#filterby_fuel_type').trigger('change');
+
+    });
+
+    //------------------------------------------------------------------------------------
+
+    $('#filterby_fuel_type').on('change', function () {
+      const NewselectedBrands = $('#filterby_brand').val();
+      const Newselectedmodels = $('#filterby_model').val();
+      const Newselectedfueltypes = $(this).val();
+
+      const filteredtrans = carData
+        .filter(car => Newselectedmodels.includes(car.model) && NewselectedBrands.includes(car.brand) && Newselectedfueltypes.includes(car.fuel_type))
+        .map(car => car.transimision);
+
+      const uniqueTrans = [...new Set(filteredtrans)];
+      $('#filterby_transimision').html('');
+
+      uniqueTrans.forEach(m => $('#filterby_transimision').append(`<option value="${m}">${m}</option>`));
+
+      $('#filterby_transimision').multiSelect('unload');
+      $('#filterby_transimision').multiSelect();
+      $('#filterby_transimision').trigger('change');
     });
 
   });
