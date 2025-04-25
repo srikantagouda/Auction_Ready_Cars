@@ -1,0 +1,74 @@
+/* Show it is fixed to the top */
+body {
+    /* min-height: 75rem; */
+    padding-top: 4.5rem;
+  }
+
+.oc-table {
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: normal;
+    border: none;
+    border-collapse: collapse;
+    background-color: white;
+    width: 100%;
+}
+
+.oc-table td, .oc-table th {
+    text-align: center;
+    padding: 5px;
+}
+
+.oc-table td {
+    border: 1px solid #f8f8f8;
+    font-size: 12px;
+}
+
+.oc-table thead th {
+    color: #ffffff;
+    background: #4FC3A1;
+}
+
+.oc-table thead th:nth-child(odd) {
+    color: #ffffff;
+    background: #324960;
+}
+
+.oc-table tr:nth-child(even) {
+background: #F8F8F8;
+}
+
+.table_filter tr:hover {
+    background-color: lightblue !important; /* Light grey background on hover */
+    transition: background-color 0.3s ease; /* Smooth transition */
+    cursor: pointer; 
+}
+
+.table_filter .selected-car{
+    background-color: lightblue !important;
+}
+
+.truncate-text{
+    text-align: left !important;
+    max-width: 50px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+
+.truncate-text.expanded{
+    overflow: visible;
+    text-overflow: unset;
+    white-space: normal;
+}
+
+.custom-offcanvas-width {
+    width: 300px !important; /* Adjust the width as needed */
+}
+
+  .multi-select-button, .multi-select-container {
+    width: 100% !important;
+  }
+
