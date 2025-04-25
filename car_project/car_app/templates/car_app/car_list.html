@@ -10,15 +10,19 @@
     <div class="card">
 
       <div class="card-header bg-info d-flex justify-content-between align-items-center">
-        <a class="btn btn-primary me-2" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button"
-          aria-controls="offcanvasExample">
-          &#9776; <!-- Unicode for three horizontal lines --> Apply Filter
-        </a>
+        <div class="d-flex">
+          <a class="btn btn-primary me-2" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button"
+            aria-controls="offcanvasExample">
+            &#9776; <!-- Unicode for three horizontal lines --> Apply Filter
+          </a>
+          <a href="{% url 'car_list' %}" class="btn btn-warning me-2">Clear Filter</a>
+        </div>
         <h5 class="p-0 m-0">All Car List</h5>
         <!-- <div class="d-flex align-items-center">
             <input id="searchbox" type="search" class="form-control form-control-sm" placeholder="Search..." aria-label="Search">
         </div> -->
       </div>
+
 
       <div class="card-body p-0"
         style="min-height:calc(100vh - 350px);max-height:calc(100vh - 350px);overflow-y: auto;">
@@ -213,7 +217,6 @@
       </div>
       <div class="mb-3">
         <select class="form-select filter_cars" name="carfueltypes" multiple="multiple" id="filterby_fuel_type">
-
         </select>
       </div>
 
@@ -232,14 +235,14 @@
           value="{{ selected_km_from }}">
       </div>
       <div class="mb-3">
-        <label for="filterby_kmto" class="form-label">IKM To:</label>
+        <label for="filterby_kmto" class="form-label">KM To:</label>
         <input type="number" class="form-control form-control-sm" id="filterby_kmto" name="filterby_kmto"
           value="{{ selected_km_to }}">
       </div>
 
 
       <div class="d-flex justify-content-between">
-        <a href="{% url 'car_list' %}" class="btn btn-warning btn-sm">Clear Filter</a>
+        <!-- <a href="{% url 'car_list' %}" class="btn btn-warning btn-sm">Clear Filter</a> -->
 
         <button type="submit" class="btn btn-primary btn-sm">Apply Filter</button>
 
