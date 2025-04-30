@@ -72,3 +72,6 @@ background: #F8F8F8;
     width: 100% !important;
   }
 
+  .multi-select-button:after{
+    margin-left: 9em;
+  }
