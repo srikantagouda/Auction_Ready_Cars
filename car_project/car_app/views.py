@@ -1,6 +1,6 @@
 import json
 
-from datetime import datetime
+from datetime import datetime, date
 
 from django.core.paginator import Paginator
 from django.shortcuts import render, HttpResponse
@@ -14,15 +14,20 @@ def car_list(request):
     selected_models = request.GET.getlist('carmodels')
     selected_fuel_types = request.GET.getlist('carfueltypes')
     selected_transimisions = request.GET.getlist('cartransimisions')
+
+    selected_registeringsafgift = request.GET.getlist('registeringsafgift')
+    selected_filter_tax = request.GET.getlist('filter_tax')
     
     date_from = request.GET.get('filterby_datefrom')
     date_to = request.GET.get('filterby_dateto')
     
 # Convert the date strings to datetime objects
     if date_from:
-        date_from = datetime.strptime(date_from, '%Y-%m-%d').date()
+        #date_from = datetime.strptime(date_from, '%Y-%m-%d').date()
+        date_from = date(int(date_from), 1, 1)
     if date_to:
-        date_to = datetime.strptime(date_to, '%Y-%m-%d').date()
+        #date_to = datetime.strptime(date_to, '%Y-%m-%d').date()
+        date_to = date(int(date_to), 12, 31)
 
     selected_km_from = request.GET.get('filterby_kmfrom')
     selected_km_to = request.GET.get('filterby_kmto')
@@ -42,13 +47,22 @@ def car_list(request):
         cars = cars.filter(fuel_type__in=selected_fuel_types)
     if selected_transimisions:
         cars = cars.filter(transimision__in=selected_transimisions)
-    
+
+    if selected_registeringsafgift:
+        cars = cars.filter(registeringsafgift__in=selected_registeringsafgift)
+    if selected_filter_tax:
+        cars = cars.filter(tax_moms_or_inkl__in=selected_filter_tax)
+
+
     if date_from and date_to:
-        cars = cars.filter(date__gte=date_from, date__lte=date_to)
+        #cars = cars.filter(date__gte=date_from, date__lte=date_to)
+        cars = cars.filter(registrering__gte=date_from, registrering__lte=date_to)
     elif date_from:
-        cars = cars.filter(date__gte=date_from)
+        #cars = cars.filter(date__gte=date_from)
+        cars = cars.filter(registrering__gte=date_from)
     elif date_to:
-        cars = cars.filter(date__lte=date_to)
+        #cars = cars.filter(date__lte=date_to)
+        cars = cars.filter(registrering__lte=date_to)
 
     if selected_km_from and selected_km_to:
         cars = cars.filter(kilometer__gte=selected_km_from, kilometer__lte=selected_km_to)
@@ -57,7 +71,7 @@ def car_list(request):
     elif selected_km_to:
         cars = cars.filter(kilometer__lte=selected_km_to)
 
-        # Assuming 'cccc' is the value you want to compare against
+    # Assuming 'cccc' is the value you want to compare against
     #cars = cars.filter(other__in=selected_others, column_name__gte=cccc)
 
 
@@ -65,6 +79,8 @@ def car_list(request):
     #brand_column = Car.objects.values_list('brand', flat=True).distinct().order_by('brand')
     #model_column = Car.objects.values_list('model', flat=True).distinct().order_by('model')
     #fuel_type_column = Car.objects.values_list('fuel_type', flat=True).distinct()
+    registeringsafgift_column = Car.objects.values_list('registeringsafgift', flat=True).distinct()
+    filter_tax_column = Car.objects.values_list('tax_moms_or_inkl', flat=True).distinct()
 
     car_data = list(Car.objects.values('brand', 'model', 'fuel_type','transimision').distinct().order_by('brand', 'model'))
     car_data_json = json.dumps(car_data)
@@ -92,6 +108,11 @@ def car_list(request):
         #'brand_column' : brand_column,
         #'model_column' : model_column,
         #'fuel_type_column' : fuel_type_column,
+        'selected_registeringsafgift' : selected_registeringsafgift,
+        'registeringsafgift_column' : registeringsafgift_column,
+        'selected_filter_tax' : selected_filter_tax,
+        'filter_tax_column' : filter_tax_column,
+
 
         'selected_brands' : selected_brands,
         'selected_models' : selected_models,

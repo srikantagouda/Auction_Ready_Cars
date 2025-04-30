@@ -27,16 +27,8 @@
       <div class="card-body p-0"
         style="min-height:calc(100vh - 350px);max-height:calc(100vh - 350px);overflow-y: auto;">
         <table class="oc-table" style="min-height:200px">
-          <thead>
+          <thead style="position: sticky; top: 0; background-color: white; z-index: 1;">
             <tr>
-              <!-- <th>car_id</th> -->
-              <!-- <th style="width: 10%;">Date</th>
-              <th style="width: 50px;">Registrering</th>
-              <th style="width: 50px;">Brand</th>
-              <th style="width: 50px;">Model</th>
-              <th style="width: 50px;">Fuel Type</th>
-              <th style="width: 50px;">Horsepower</th>
-              <th style="width: 50px;">Price</th> -->
               <th style="width: 20px;">Date</th>
               <th style="width: 1%;">Registrering</th>
               <th style="width: 1%;">Brand</th>
@@ -57,10 +49,8 @@
               <th style="width: 1%;">Tax(+moms or inkl)</th>
               <th style="width: 1%;">Stelnummer</th>
               <th style="width: 9%;">Price</th>
-
             </tr>
           </thead>
-
           <tbody class="table_filter">
             {% if page_obj.object_list %}
             {% for car in page_obj %}
@@ -86,23 +76,17 @@
               <td>{{ car.stelnummer }}</td>
               <td class="text-nowrap">&#8364; {{ car.price }}</td>
               <td hidden><input type="text" hidden id="carimages_{{ car.car_id }}" value="{{ car.image_names }}"></td>
-
             </tr>
-
             {% endfor %}
             {% else %}
             <tr>
               <td colspan="20" style="font-size: 20px;">No cars found.</td>
             </tr>
-
-
             {% endif %}
-
-
           </tbody>
-
         </table>
       </div>
+
 
 
 
@@ -182,13 +166,15 @@
   <div class="offcanvas-body">
     <form id="filter-form" method="get">
       <div class="mb-3">
-        <label for="filterby_datefrom" class="form-label">Date From:</label>
-        <input type="date" class="form-control form-control-sm" id="filterby_datefrom" name="filterby_datefrom"
+        <label for="filterby_datefrom" class="form-label">Registrering From:</label>
+        <input type="number" oninput="this.value=this.value.slice(0,this.maxLength)" maxlength="4"
+          class="form-control form-control-sm" id="filterby_datefrom" name="filterby_datefrom"
           value="{{ selected_date_from }}">
       </div>
       <div class="mb-3">
-        <label for="filterby_dateto" class="form-label">Date To:</label>
-        <input type="date" class="form-control form-control-sm" id="filterby_dateto" name="filterby_dateto"
+        <label for="filterby_dateto" class="form-label">Registrering To:</label>
+        <input type="number" oninput="this.value=this.value.slice(0,this.maxLength)" maxlength="4"
+          class="form-control form-control-sm" id="filterby_dateto" name="filterby_dateto"
           value="{{ selected_date_to }}">
       </div>
 
@@ -197,9 +183,9 @@
       </div>
       <div class="mb-3">
         <select class="form-select filter_cars" name="carbrands" multiple="multiple" id="filterby_brand">
-          {% for brand in brand_column %}
+          <!-- {% for brand in brand_column %}
           <option value="{{brand}}" {% if brand in selected_brands %} selected {% endif %}>{{brand}}</option>
-          {% endfor %}
+          {% endfor %} -->
         </select>
       </div>
 
@@ -241,6 +227,32 @@
       </div>
 
 
+      <div class="">
+        <label for="filterby_registeringsafgift" class="form-label">Select Registeringsafgift:</label>
+      </div>
+      <div class="mb-3">
+        <select class="form-select filter_cars" name="registeringsafgift" multiple="multiple"
+          id="filterby_registeringsafgift">
+          {% for registeringsafgift in registeringsafgift_column %}
+          <option value="{{registeringsafgift}}" {% if registeringsafgift in selected_registeringsafgift %} selected {% endif %}>
+            {{registeringsafgift}}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="">
+        <label for="filterby_tax" class="form-label">Select Tax(+moms or inkl):</label>
+      </div>
+      <div class="mb-3">
+        <select class="form-select filter_cars" name="filter_tax" multiple="multiple" id="filterby_tax">
+          {% for filter_tax in filter_tax_column %}
+          <option value="{{filter_tax}}" {% if filter_tax in selected_filter_tax %} selected {% endif %}>
+            {{filter_tax}}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+
       <div class="d-flex justify-content-between">
         <!-- <a href="{% url 'car_list' %}" class="btn btn-warning btn-sm">Clear Filter</a> -->
 
@@ -271,6 +283,11 @@
 
 
   $(document).ready(function () {
+
+    //Multiselect for two diff new filter.
+    $('#filterby_registeringsafgift').multiSelect();
+    $('#filterby_tax').multiSelect();
+
 
     const carData = JSON.parse($('#carDataJson').val());
     const allBrands = [...new Set(carData.map(c => c.brand))];
