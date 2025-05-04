@@ -24,10 +24,16 @@ def car_list(request):
 # Convert the date strings to datetime objects
     if date_from:
         #date_from = datetime.strptime(date_from, '%Y-%m-%d').date()
-        date_from = date(int(date_from), 1, 1)
+        try:
+            date_from = date(int(date_from), 1, 1)
+        except:
+            date_from = None
     if date_to:
         #date_to = datetime.strptime(date_to, '%Y-%m-%d').date()
-        date_to = date(int(date_to), 12, 31)
+        try:
+            date_to = date(int(date_to), 12, 31)
+        except:
+            date_to = None
 
     selected_km_from = request.GET.get('filterby_kmfrom')
     selected_km_to = request.GET.get('filterby_kmto')
