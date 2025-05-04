@@ -71,6 +71,8 @@ def car_list(request):
     elif selected_km_to:
         cars = cars.filter(kilometer__lte=selected_km_to)
 
+    cars = cars.order_by('-date','car_id')
+    
     # Assuming 'cccc' is the value you want to compare against
     #cars = cars.filter(other__in=selected_others, column_name__gte=cccc)
 
