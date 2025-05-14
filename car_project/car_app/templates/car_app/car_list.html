@@ -164,26 +164,36 @@
     <h5 class="offcanvas-title" id="offcanvasExampleLabel">Filter Options</h5>
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
-  <div class="offcanvas-body">
+  <div class="offcanvas-body" style="padding-right: 0px !important;">
     <form id="filter-form" method="get">
+      
       <div class="mb-3">
         <label for="filterby_datefrom" class="form-label">Registrering From:</label>
-        <input type="number" oninput="this.value=this.value.slice(0,this.maxLength)" maxlength="4"
-          class="form-control form-control-sm" id="filterby_datefrom" name="filterby_datefrom"
-          value="{{ selected_date_from }}">
-      </div>
-      <div class="mb-3">
+        <input type="text" 
+               id="filterby_datefrom" 
+               name="filterby_datefrom" 
+               class="form-control form-control-sm setmaxw" 
+               maxlength="4" 
+               value="{{ selected_date_from }}"
+               oninput="this.value = this.value.replace(/\D/g, ''); if (this.value === '0') this.value = '';">
+              </div>
+    
+    <div class="mb-3">
         <label for="filterby_dateto" class="form-label">Registrering To:</label>
-        <input type="number" oninput="this.value=this.value.slice(0,this.maxLength)" maxlength="4"
-          class="form-control form-control-sm" id="filterby_dateto" name="filterby_dateto"
-          value="{{ selected_date_to }}">
-      </div>
+        <input type="text" 
+               id="filterby_dateto" 
+               name="filterby_dateto" 
+               class="form-control form-control-sm setmaxw" 
+               maxlength="4" 
+               value="{{ selected_date_to }}"
+               oninput="this.value = this.value.replace(/\D/g, ''); if (this.value === '0') this.value = '';">
+              </div>
 
       <div class="">
         <label for="filterby_brand" class="form-label">Select Brands:</label>
       </div>
       <div class="mb-3">
-        <select class="form-select filter_cars" name="carbrands" multiple="multiple" id="filterby_brand">
+        <select class="form-select filter_cars setmaxw" name="carbrands" multiple="multiple" id="filterby_brand">
           <!-- {% for brand in brand_column %}
           <option value="{{brand}}" {% if brand in selected_brands %} selected {% endif %}>{{brand}}</option>
           {% endfor %} -->
@@ -218,14 +228,24 @@
 
       <div class="mb-3">
         <label for="filterby_kmfrom" class="form-label">KM From:</label>
-        <input type="text" class="form-control form-control-sm" id="filterby_kmfrom" name="filterby_kmfrom"
-          value="{{ selected_km_from }}">
-      </div>
-      <div class="mb-3">
+        <input type="text" 
+               class="form-control form-control-sm setmaxw" 
+               id="filterby_kmfrom" 
+               name="filterby_kmfrom"
+               value="{{ selected_km_from }}"
+               oninput="this.value = this.value.replace(/\D/g, ''); if (this.value === '0') this.value = '';">
+              </div>
+    
+    <div class="mb-3">
         <label for="filterby_kmto" class="form-label">KM To:</label>
-        <input type="number" class="form-control form-control-sm" id="filterby_kmto" name="filterby_kmto"
-          value="{{ selected_km_to }}">
-      </div>
+        <input type="text" 
+               class="form-control form-control-sm setmaxw"  
+               id="filterby_kmto" 
+               name="filterby_kmto"
+               value="{{ selected_km_to }}"
+               oninput="this.value = this.value.replace(/\D/g, ''); if (this.value === '0') this.value = '';">
+              </div>
+    
 
 
       <div class="">
@@ -257,7 +277,7 @@
       <div class="d-flex justify-content-between">
         <!-- <a href="{% url 'car_list' %}" class="btn btn-warning btn-sm">Clear Filter</a> -->
 
-        <button type="submit" class="btn btn-primary btn-sm">Apply Filter</button>
+        <button type="submit" class="btn btn-primary btn-sm" id="applyFilterBtn">Apply Filter</button>
 
       </div>
     </form>
@@ -298,7 +318,24 @@
     //Multiselect for two diff new filter.
     $('#filterby_registeringsafgift').multiSelect();
     $('#filterby_tax').multiSelect();
+    
+    $('#applyFilterBtn').on('click', function(event){
+            var fromValue = $('#filterby_datefrom').val();
+            var toValue = $('#filterby_dateto').val();
 
+            // Check if 'from' field is invalid (not a valid 4-digit number or less than 1000)
+            if (fromValue && (fromValue.length !== 4 || !/^\d{4}$/.test(fromValue) )) {
+                alert("Please enter a valid 4-digit year.");
+                event.preventDefault();
+                return; // Stop further checks
+            }
+
+            // Check if 'to' field is invalid (not a valid 4-digit number or less than 1000)
+            if (toValue && (toValue.length !== 4 || !/^\d{4}$/.test(toValue))) {
+                alert("Please enter a valid 4-digit year.");
+                event.preventDefault();
+            }
+        });
 
     const carData = JSON.parse($('#carDataJson').val());
     const allBrands = [...new Set(carData.map(c => c.brand))];

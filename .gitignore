@@ -1,2 +1,14 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# VS Code settings
+.vscode/
+
+# Virtual environments
 /.venv
+
+# Image files
 /car_project/car_images/

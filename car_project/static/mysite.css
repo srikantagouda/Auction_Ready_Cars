@@ -65,7 +65,7 @@ background: #F8F8F8;
 }
 
 .custom-offcanvas-width {
-    width: 300px !important; /* Adjust the width as needed */
+    width: 280px !important; /* Adjust the width as needed */
 }
 
   .multi-select-button, .multi-select-container {
@@ -74,4 +74,8 @@ background: #F8F8F8;
 
   .multi-select-button:after{
     margin-left: 9em;
+  }
+
+  .setmaxw{
+    max-width: 224px !important;
   }
