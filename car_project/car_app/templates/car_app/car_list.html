@@ -26,7 +26,7 @@
 
       <div class="card-body p-0"
         style="min-height:calc(100vh - 350px);max-height:calc(100vh - 350px);overflow-y: auto;">
-        <table class="oc-table" style="min-height:200px">
+        <table class="oc-table" style="min-height:200px" id="cartable_datatable">
           <thead style="position: sticky; top: 0; background-color: white; z-index: 1;">
             <tr>
               <th style="width: 20px;">Date</th>
@@ -49,6 +49,7 @@
               <th style="width: 1%;">Tax(+moms or inkl)</th>
               <th style="width: 1%;">Stelnummer</th>
               <th style="width: 9%;">Price</th>
+              <th hidden >Hidden for last TD</th>
             </tr>
           </thead>
           <tbody class="table_filter">
@@ -280,6 +281,16 @@
 
 
 
+
+  $(document).ready(function () {
+    $('#cartable_datatable').DataTable({
+      paging: false,        // Disable pagination
+      searching: false,     // Disable search box
+      info: true,           // Show "Showing X of Y entries"
+      pageLength: -1,       // Show all items
+      lengthChange: false   // Hide the "Show X entries" dropdown
+    });
+  });
 
 
   $(document).ready(function () {
