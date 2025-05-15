@@ -52,90 +52,116 @@
               <th hidden >Hidden for last TD</th>
             </tr>
           </thead>
+          
           <tbody class="table_filter">
             {% if page_obj.object_list %}
-            {% for car in page_obj %}
-            <tr id="carid_{{ car.car_id }}{{ car.stelnummer }}" class="">
-              <td class="text-nowrap">{{ car.date|date:"M d, Y" }}</td>
-              <td class="text-nowrap">{{ car.registrering|date:"M d, Y" }}</td>
-              <td>{{ car.brand }}</td>
-              <td>{{ car.model }}</td>
-              <td>{{ car.horsepower }}</td>
-              <td>{{ car.fuel_type }}</td>
-              <td>{{ car.transimision }}</td>
-              <td>{{ car.kilometer }}</td>
-              <td>{{ car.engine_size }}</td>
-              <td>{{ car.number_of_doors }}</td>
-              <td>{{ car.number_of_seats }}</td>
-              <td>{{ car.karosseri }}</td>
-              <td>{{ car.koretype }}</td>
-              <td>{{ car.kosmetisk }}</td>
-              <td>{{ car.mekanisk }}</td>
-              <td class="truncate-text" onclick="showFullText(this)">{{ car.kommentar }} </td>
-              <td>{{ car.registeringsafgift }}</td>
-              <td>{{ car.tax_moms_or_inkl }}</td>
-              <td>{{ car.stelnummer }}</td>
-              <td class="text-nowrap">&#8364; {{ car.price }}</td>
-              <td hidden><input type="text" hidden id="carimages_{{ car.car_id }}{{ car.stelnummer }}" value="{{ car.image_names }}"></td>
-            </tr>
-            {% endfor %}
+              {% for car in page_obj %}
+              <tr id="carid_{{ car.car_id }}{{ car.stelnummer }}" class="">
+                <td class="text-nowrap">{{ car.date|date:"M d, Y" }}</td>
+                <td class="text-nowrap">{{ car.registrering|date:"M d, Y" }}</td>
+                <td>{{ car.brand }}</td>
+                <td>{{ car.model }}</td>
+                <td>{{ car.horsepower }}</td>
+                <td>{{ car.fuel_type }}</td>
+                <td>{{ car.transimision }}</td>
+                <td>{{ car.kilometer }}</td>
+                <td>{{ car.engine_size }}</td>
+                <td>{{ car.number_of_doors }}</td>
+                <td>{{ car.number_of_seats }}</td>
+                <td>{{ car.karosseri }}</td>
+                <td>{{ car.koretype }}</td>
+                <td>{{ car.kosmetisk }}</td>
+                <td>{{ car.mekanisk }}</td>
+                <td class="truncate-text" onclick="showFullText(this)">{{ car.kommentar }} </td>
+                <td>{{ car.registeringsafgift }}</td>
+                <td>{{ car.tax_moms_or_inkl }}</td>
+                <td>{{ car.stelnummer }}</td>
+                <td class="text-nowrap">&#8364; {{ car.price }}</td>
+                <td hidden><input type="text" hidden id="carimages_{{ car.car_id }}{{ car.stelnummer }}" value="{{ car.image_names }}"></td>
+              </tr>
+              {% endfor %}
             {% else %}
             <tr>
               <td colspan="20" style="font-size: 20px;">No cars found.</td>
             </tr>
             {% endif %}
+            
           </tbody>
         </table>
       </div>
 
 
-
+      <!-- Pagination Start -->
 
       <div class="card-body pb-0">
         {% if page_obj.paginator.num_pages > 1 %}
-        <nav aria-label="Page navigation example">
-          <ul class="pagination">
-            {% if page_obj.has_previous %}
-            <li class="page-item">
-              <a class="page-link" href="?page=1&{{ get_params }}" aria-label="First">
-                <span aria-hidden="true">&laquo;&laquo;</span>
-                <span class="sr-only">First</span>
-              </a>
-            </li>
-            <li class="page-item">
-              <a class="page-link" href="?page={{ page_obj.previous_page_number }}&{{ get_params }}"
-                aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-                <span class="sr-only">Previous</span>
-              </a>
-            </li>
-            {% endif %}
-
-            {% for num in page_obj.paginator.page_range %}
-            <li class="page-item {% if page_obj.number == num %}active{% endif %}">
-              <a class="page-link" href="?page={{ num }}&{{ get_params }}">{{ num }}</a>
-            </li>
-            {% endfor %}
-
-            {% if page_obj.has_next %}
-            <li class="page-item">
-              <a class="page-link" href="?page={{ page_obj.next_page_number }}&{{ get_params }}" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-                <span class="sr-only">Next</span>
-              </a>
-            </li>
-            <li class="page-item">
-              <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&{{ get_params }}" aria-label="Last">
-                <span aria-hidden="true">&raquo;&raquo;</span>
-                <span class="sr-only">Last</span>
-              </a>
-            </li>
-            {% endif %}
-          </ul>
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {# First and Previous Buttons #}
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1&{{ get_params }}" aria-label="First">
+                            &laquo;&laquo;&nbsp;First
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}&{{ get_params }}" aria-label="Previous">
+                            &laquo;&nbsp;Previous
+                        </a>
+                    </li>
+                {% endif %}
+    
+                {# Page Number Links #}
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number <= 5 %}
+                        {% if num <= 10 %}
+                            <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                                <a class="page-link" href="?page={{ num }}&{{ get_params }}">{{ num }}</a>
+                            </li>
+                        {% elif num == 11 %}
+                            <li class="page-item disabled"><span class="page-link">...</span></li>
+                        {% endif %}
+                    {% elif page_obj.number > 5 and page_obj.number < page_obj.paginator.num_pages|add:"-5" %}
+                        {% if num == page_obj.number|add:"-5" %}
+                            <li class="page-item disabled"><span class="page-link">...</span></li>
+                        {% endif %}
+                        {% if num >= page_obj.number|add:"-4" and num <= page_obj.number|add:"4" %}
+                            <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                                <a class="page-link" href="?page={{ num }}&{{ get_params }}">{{ num }}</a>
+                            </li>
+                        {% endif %}
+                        {% if num == page_obj.number|add:"5" %}
+                            <li class="page-item disabled"><span class="page-link">...</span></li>
+                        {% endif %}
+                    {% else %}
+                        {% if num >= page_obj.paginator.num_pages|add:"-9" %}
+                            <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                                <a class="page-link" href="?page={{ num }}&{{ get_params }}">{{ num }}</a>
+                            </li>
+                        {% elif num == page_obj.paginator.num_pages|add:"-10" %}
+                            <li class="page-item disabled"><span class="page-link">...</span></li>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+    
+                {# Next and Last Buttons #}
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}&{{ get_params }}" aria-label="Next">
+                            Next&nbsp;&raquo;
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&{{ get_params }}" aria-label="Last">
+                            Last&nbsp;&raquo;&raquo;
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
         </nav>
         {% endif %}
-      </div>
-
+    </div>
+    <!-- Pagination End -->
 
 
 
@@ -302,16 +328,22 @@
 
 
 
-  $(document).ready(function () {
-    $('#cartable_datatable').DataTable({
-      paging: false,        // Disable pagination
-      searching: false,     // Disable search box
-      info: true,           // Show "Showing X of Y entries"
-      pageLength: -1,       // Show all items
-      lengthChange: false,   // Hide the "Show X entries" dropdown
-      dom: 't'
-    });
+  $(document).ready(function() {
+      var carTable = $('#cartable_datatable');
+      
+      // Check if there are rows inside <tbody> (excluding the "No cars found" row)
+      if (carTable.find('tbody tr').length > 1 || carTable.find('tbody tr td').length > 1) {
+          carTable.DataTable({
+              paging: false,        // Disable pagination
+              searching: false,     // Disable search box
+              info: true,           // Show "Showing X of Y entries"
+              pageLength: -1,       // Show all items
+              lengthChange: false,  // Hide the "Show X entries" dropdown
+              dom: 't'
+          });
+      }
   });
+
 
 
   $(document).ready(function () {

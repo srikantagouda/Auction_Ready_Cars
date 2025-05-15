@@ -3,10 +3,12 @@ import json
 from datetime import datetime, date
 from itertools import chain
 
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.shortcuts import render, HttpResponse
 from .models import Car  # , Image
 
+#@login_required
 def car_list(request):
     
     #return HttpResponse(request)
@@ -132,7 +134,7 @@ def car_list(request):
     selected_fuel_types = json.dumps(selected_fuel_types)
     selected_transimisions = json.dumps(selected_transimisions)
 
-    paginator = Paginator(cars, 10)
+    paginator = Paginator(cars, 100)
     page_number = request.GET.get('page')
 
     if page_number == None:
@@ -145,7 +147,7 @@ def car_list(request):
         get_params.pop('page')
 
     return render(request, 'car_app/car_list.html',{
-        'cars': cars,
+        # 'cars': cars,
         'page_obj': page_obj,
         #'brand_column' : brand_column,
         #'model_column' : model_column,
