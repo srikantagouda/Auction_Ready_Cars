@@ -55,7 +55,7 @@
           <tbody class="table_filter">
             {% if page_obj.object_list %}
             {% for car in page_obj %}
-            <tr id="carid_{{ car.car_id }}" class="">
+            <tr id="carid_{{ car.car_id }}{{ car.stelnummer }}" class="">
               <td class="text-nowrap">{{ car.date|date:"M d, Y" }}</td>
               <td class="text-nowrap">{{ car.registrering|date:"M d, Y" }}</td>
               <td>{{ car.brand }}</td>
@@ -76,7 +76,7 @@
               <td>{{ car.tax_moms_or_inkl }}</td>
               <td>{{ car.stelnummer }}</td>
               <td class="text-nowrap">&#8364; {{ car.price }}</td>
-              <td hidden><input type="text" hidden id="carimages_{{ car.car_id }}" value="{{ car.image_names }}"></td>
+              <td hidden><input type="text" hidden id="carimages_{{ car.car_id }}{{ car.stelnummer }}" value="{{ car.image_names }}"></td>
             </tr>
             {% endfor %}
             {% else %}

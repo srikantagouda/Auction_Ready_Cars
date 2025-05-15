@@ -1,6 +1,7 @@
 import json
 
 from datetime import datetime, date
+from itertools import chain
 
 from django.core.paginator import Paginator
 from django.shortcuts import render, HttpResponse
@@ -21,7 +22,7 @@ def car_list(request):
     date_from = request.GET.get('filterby_datefrom')
     date_to = request.GET.get('filterby_dateto')
     
-# Convert the date strings to datetime objects
+    # Convert the date strings to datetime objects
     if date_from:
         #date_from = datetime.strptime(date_from, '%Y-%m-%d').date()
         try:
@@ -39,45 +40,78 @@ def car_list(request):
     selected_km_to = request.GET.get('filterby_kmto')
 
     if selected_km_from:
-        selected_km_from = int(selected_km_from)
+        try:
+            selected_km_from = int(selected_km_from)
+        except:
+            selected_km_from = None
     if selected_km_to:
-         selected_km_to = int(selected_km_to)
-
-    cars = Car.objects.all()
+        try:
+            selected_km_to = int(selected_km_to)
+        except:
+            selected_km_to = None
     
+    #cars = Car.objects.all()
+    
+    #Prepare the filter Parameters.
+    filter_params = {}
+
     if selected_brands:
-        cars = cars.filter(brand__in=selected_brands)
+        filter_params['brand__in'] = selected_brands
+        #cars = cars.filter(brand__in=selected_brands)
     if selected_models:
-        cars = cars.filter(model__in=selected_models)
+        filter_params['model__in'] = selected_models
+        #cars = cars.filter(model__in=selected_models)
     if selected_fuel_types:
-        cars = cars.filter(fuel_type__in=selected_fuel_types)
+        filter_params['fuel_type__in'] = selected_fuel_types
+        #cars = cars.filter(fuel_type__in=selected_fuel_types)
     if selected_transimisions:
-        cars = cars.filter(transimision__in=selected_transimisions)
+        filter_params['transimision__in'] = selected_transimisions
+        #cars = cars.filter(transimision__in=selected_transimisions)
 
     if selected_registeringsafgift:
-        cars = cars.filter(registeringsafgift__in=selected_registeringsafgift)
+        filter_params['registeringsafgift__in'] = selected_registeringsafgift
+        #cars = cars.filter(registeringsafgift__in=selected_registeringsafgift)
     if selected_filter_tax:
-        cars = cars.filter(tax_moms_or_inkl__in=selected_filter_tax)
+        filter_params['tax_moms_or_inkl__in'] = selected_filter_tax
+        #cars = cars.filter(tax_moms_or_inkl__in=selected_filter_tax)
 
 
     if date_from and date_to:
         #cars = cars.filter(date__gte=date_from, date__lte=date_to)
-        cars = cars.filter(registrering__gte=date_from, registrering__lte=date_to)
+        filter_params['registrering__range'] = (date_from, date_to)
+        #filter_params['registrering__lte'] = date_to
+        #cars = cars.filter(registrering__gte=date_from, registrering__lte=date_to)
     elif date_from:
         #cars = cars.filter(date__gte=date_from)
-        cars = cars.filter(registrering__gte=date_from)
+        filter_params['registrering__gte'] = date_from
+        #cars = cars.filter(registrering__gte=date_from)
     elif date_to:
         #cars = cars.filter(date__lte=date_to)
-        cars = cars.filter(registrering__lte=date_to)
+        filter_params['registrering__lte'] = date_to
+        #cars = cars.filter(registrering__lte=date_to)
 
     if selected_km_from and selected_km_to:
-        cars = cars.filter(kilometer__gte=selected_km_from, kilometer__lte=selected_km_to)
+        filter_params['kilometer__range'] = (selected_km_from, selected_km_to)
+        #cars = cars.filter(kilometer__gte=selected_km_from, kilometer__lte=selected_km_to)
     elif selected_km_from:
-        cars = cars.filter(kilometer__gte=selected_km_from)
+        filter_params['kilometer__gte'] = selected_km_from
+        #cars = cars.filter(kilometer__gte=selected_km_from)
     elif selected_km_to:
-        cars = cars.filter(kilometer__lte=selected_km_to)
+        filter_params['kilometer__lte'] = selected_km_to
+        #cars = cars.filter(kilometer__lte=selected_km_to)
 
-    cars = cars.order_by('-date','car_id')
+    db1_cars = Car.objects.using('default').filter(**filter_params)
+    db2_cars = Car.objects.using('db2').filter(**filter_params)
+
+    #cars = list(db1_cars) + list(db2_cars)
+    cars = sorted(
+        chain(db1_cars, db2_cars),
+        key=lambda car: (car.date, car.car_id),
+        reverse=True
+    )
+    
+    #Below is the method of db order_by
+    #cars = cars.order_by('-date','car_id')
     
     # Assuming 'cccc' is the value you want to compare against
     #cars = cars.filter(other__in=selected_others, column_name__gte=cccc)
@@ -98,7 +132,7 @@ def car_list(request):
     selected_fuel_types = json.dumps(selected_fuel_types)
     selected_transimisions = json.dumps(selected_transimisions)
 
-    paginator = Paginator(cars, 100)
+    paginator = Paginator(cars, 10)
     page_number = request.GET.get('page')
 
     if page_number == None:
