@@ -102,8 +102,8 @@ def car_list(request):
         filter_params['kilometer__lte'] = selected_km_to
         #cars = cars.filter(kilometer__lte=selected_km_to)
 
-    db1_cars = Car.objects.using('default').filter(**filter_params)
-    db2_cars = Car.objects.using('db2').filter(**filter_params)
+    db1_cars = Car.objects.using('default').filter(**filter_params).order_by('-date','-car_id')
+    db2_cars = Car.objects.using('db2').filter(**filter_params).order_by('-date','-car_id')
 
     #cars = list(db1_cars) + list(db2_cars)
     cars = sorted(
