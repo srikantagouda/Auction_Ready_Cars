@@ -12,3 +12,4 @@ __pycache__/
 
 # Image files
 /car_project/car_images/
+/*.sqlite3

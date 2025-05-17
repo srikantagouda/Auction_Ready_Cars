@@ -8,7 +8,7 @@ from django.core.paginator import Paginator
 from django.shortcuts import render, HttpResponse
 from .models import Car  # , Image
 
-#@login_required
+@login_required
 def car_list(request):
     
     #return HttpResponse(request)
