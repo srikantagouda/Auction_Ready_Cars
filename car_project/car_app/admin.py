@@ -27,4 +27,4 @@ class CarAdmin(admin.ModelAdmin):
     car_id_upper.short_description = 'Car ID' # Custom column name in uppercase
 
 
-admin.site.register(Car,CarAdmin)
+admin.site.register(Car, CarAdmin)
