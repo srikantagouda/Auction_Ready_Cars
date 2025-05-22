@@ -13,6 +13,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const rows = document.querySelectorAll('tbody.table_filter tr');
     rows.forEach(row => {
         row.addEventListener('click', function() {
+            
+            if(false){
+                const cellIndex = Array.from(this.cells).indexOf(event.target.closest('td'));
+                if (cellIndex === 0) {
+                    const checkbox = event.target.closest('td').querySelector('input[type="checkbox"]');
+                    if (checkbox) {
+                        checkbox.checked = !checkbox.checked;
+                    }
+                    return;
+                }
+            }
+            
             // Remove 'selected-car' class from all rows
             rows.forEach(r => r.classList.remove('selected-car'));
             // Add 'selected-car' class to the clicked row

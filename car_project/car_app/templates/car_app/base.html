@@ -35,6 +35,17 @@
                     <li>
                         <a target="_blank" href="{% url 'admin:index' %}" class="nav-link">Admin Panel</a>
                     </li>
+                    
+                    <li>
+                        <a href="#" class="nav-link" style="color: black; background-color: wheat; cursor: default; display: inline-flex; align-items: center; gap: 6px; padding: 8px 8px;">
+                            Scrapper Status: 
+                            <span style="color: green;">Running</span>
+                            <div class="spinner-border text-success" role="status" style="width: 1rem; height: 1rem; border-width: 0.15em;">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </a>
+                    </li>
+
                 </ul>
     
                 <!-- Show logout button if user is logged in -->
@@ -62,7 +73,7 @@
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js"></script> -->
     <script src="{% static 'js/bootstrap/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'multi-select/jquery.multi-select.min.js' %}"></script>
-    <script src="{% static 'js/myscript.js' %}"></script>
+    <script src="{% static 'myscript.js' %}"></script>
 
     <!-- <script src="{% static 'js/myscript.js' %}"></script> -->
     <script src="https://cdn.datatables.net/2.3.0/js/dataTables.js"></script>

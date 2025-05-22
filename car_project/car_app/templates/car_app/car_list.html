@@ -16,6 +16,8 @@
             &#9776; <!-- Unicode for three horizontal lines --> Apply Filter
           </a>
           <a href="{% url 'car_list' %}" class="btn btn-warning me-2">Clear Filter</a>
+          
+          <a href="#" id='avegage_value' class="btn btn-danger me-2">Avg Price= 35443 | KM= 46435</a>
         </div>
         <h5 class="p-0 m-0">All Car List</h5>
         <!-- <div class="d-flex align-items-center">
@@ -29,6 +31,7 @@
         <table class="oc-table" style="min-height:200px" id="cartable_datatable">
           <thead style="position: sticky; top: 0; background-color: white; z-index: 1;">
             <tr>
+              <!-- <th>&nbsp;&nbsp;&nbsp;</th> -->
               <th style="width: 20px;">Date</th>
               <th style="width: 1%;">Registrering</th>
               <th style="width: 1%;">Brand</th>
@@ -57,6 +60,7 @@
             {% if page_obj.object_list %}
               {% for car in page_obj %}
               <tr id="carid_{{ car.car_id }}{{ car.stelnummer }}" class="">
+                <!-- <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></td> -->
                 <td class="text-nowrap">{{ car.date|date:"M d, Y" }}</td>
                 <td class="text-nowrap">{{ car.registrering|date:"M d, Y" }}</td>
                 <td>{{ car.brand }}</td>
