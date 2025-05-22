@@ -76,6 +76,9 @@ background: #F8F8F8;
     margin-left: 9em;
   }
 
+  .setmaxw{
+    max-width: 224px !important;
+  }
 
   /* Pagination CSS */
   .pagination .page-link {

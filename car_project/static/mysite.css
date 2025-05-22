@@ -79,3 +79,23 @@ background: #F8F8F8;
   .setmaxw{
     max-width: 224px !important;
   }
+
+  /* Pagination CSS */
+  .pagination .page-link {
+    color: #007bff;
+    border-radius: 20px;
+    margin: 0 4px;
+}
+
+.pagination .active .page-link {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+}
+
+.pagination .disabled .page-link {
+    color: #6c757d;
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+}
