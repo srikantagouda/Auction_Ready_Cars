@@ -51,10 +51,14 @@
                 {% if request.user.is_authenticated %}
                     <ul class="navbar-nav ms-auto">
                         <li>
-                            <a href="{% url 'logout' %}" class="btn btn-outline-danger">Logout</a>
+                            <form method="POST" action="{% url 'logout' %}">
+                                {% csrf_token %}
+                                <button class="btn btn-outline-danger" type="submit">Logout</button>
+                            </form>
                         </li>
                     </ul>
                 {% endif %}
+                
             </div>
         </div>
     </nav>
