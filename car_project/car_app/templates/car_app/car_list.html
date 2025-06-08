@@ -4,34 +4,30 @@
 {% block content %}
 
 <div class="row align-items-start">
-
   <div class="col-9">
 
     <div class="card">
-
       <div class="card-header bg-info d-flex justify-content-between align-items-center">
         <div class="d-flex">
-          <a class="btn btn-primary me-2" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button"
-            aria-controls="offcanvasExample">
-            &#9776; <!-- Unicode for three horizontal lines --> Apply Filter
+          <a class="btn btn-primary me-2" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
+            &#9776;Apply Filter
           </a>
           <a href="{% url 'car_list' %}" class="btn btn-warning me-2">Clear Filter</a>
-          
-          <a href="#" id='avegage_value' class="btn btn-danger me-2">Avg Price= 35443 | KM= 46435</a>
+          <a href="#" id='avegage_value' class="btn me-2" style="background-color: black;color: white;cursor: default;">Avg Price= € 0 | KM= 0</a>
         </div>
+        
         <h5 class="p-0 m-0">All Car List</h5>
+        <!-- <h5 class="p-0 m-0">Available Cars</h5> -->
         <!-- <div class="d-flex align-items-center">
             <input id="searchbox" type="search" class="form-control form-control-sm" placeholder="Search..." aria-label="Search">
         </div> -->
       </div>
 
-
-      <div class="card-body p-0"
-        style="min-height:calc(100vh - 350px);max-height:calc(100vh - 350px);overflow-y: auto;">
+      <div class="card-body p-0" style="min-height:calc(100vh - 350px);max-height:calc(100vh - 350px);overflow-y: auto;">
         <table class="oc-table" style="min-height:200px" id="cartable_datatable">
           <thead style="position: sticky; top: 0; background-color: white; z-index: 1;">
             <tr>
-              <!-- <th>&nbsp;&nbsp;&nbsp;</th> -->
+              <th>&nbsp;&nbsp;&nbsp;</th>
               <th style="width: 20px;">Date</th>
               <th style="width: 1%;">Registrering</th>
               <th style="width: 1%;">Brand</th>
@@ -59,30 +55,30 @@
           <tbody class="table_filter">
             {% if page_obj.object_list %}
               {% for car in page_obj %}
-              <tr id="carid_{{ car.car_id }}{{ car.stelnummer }}" class="">
-                <!-- <td><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></td> -->
-                <td class="text-nowrap">{{ car.date|date:"M d, Y" }}</td>
-                <td class="text-nowrap">{{ car.registrering|date:"M d, Y" }}</td>
-                <td>{{ car.brand }}</td>
-                <td>{{ car.model }}</td>
-                <td>{{ car.horsepower }}</td>
-                <td>{{ car.fuel_type }}</td>
-                <td>{{ car.transimision }}</td>
-                <td>{{ car.kilometer }}</td>
-                <td>{{ car.engine_size }}</td>
-                <td>{{ car.number_of_doors }}</td>
-                <td>{{ car.number_of_seats }}</td>
-                <td>{{ car.karosseri }}</td>
-                <td>{{ car.koretype }}</td>
-                <td>{{ car.kosmetisk }}</td>
-                <td>{{ car.mekanisk }}</td>
-                <td class="truncate-text" onclick="showFullText(this)">{{ car.kommentar }} </td>
-                <td>{{ car.registeringsafgift }}</td>
-                <td>{{ car.tax_moms_or_inkl }}</td>
-                <td>{{ car.stelnummer }}</td>
-                <td class="text-nowrap">&#8364; {{ car.price }}</td>
-                <td hidden><input type="text" hidden id="carimages_{{ car.car_id }}{{ car.stelnummer }}" value="{{ car.image_names }}"></td>
-              </tr>
+                <tr id="carid_{{ car.car_id }}{{ car.stelnummer }}" class="">
+                  <td><input data-price="{{ car.price }}" data-km="{{ car.kilometer }}" class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></td>
+                  <td class="text-nowrap">{{ car.date|date:"M d, Y" }}</td>
+                  <td class="text-nowrap" data-order="{{ car.registrering|date:"Y-m-d" }}">{{ car.registrering|date:"M d, Y" }}</td>
+                  <td>{{ car.brand }}</td>
+                  <td>{{ car.model }}</td>
+                  <td>{{ car.horsepower }}</td>
+                  <td>{{ car.fuel_type }}</td>
+                  <td>{{ car.transimision }}</td>
+                  <td>{{ car.kilometer }}</td>
+                  <td>{{ car.engine_size }}</td>
+                  <td>{{ car.number_of_doors }}</td>
+                  <td>{{ car.number_of_seats }}</td>
+                  <td>{{ car.karosseri }}</td>
+                  <td>{{ car.koretype }}</td>
+                  <td>{{ car.kosmetisk }}</td>
+                  <td>{{ car.mekanisk }}</td>
+                  <td class="truncate-text" onclick="showFullText(this)">{{ car.kommentar }} </td>
+                  <td>{{ car.registeringsafgift }}</td>
+                  <td>{{ car.tax_moms_or_inkl }}</td>
+                  <td>{{ car.stelnummer }}</td>
+                  <td class="text-nowrap">&#8364; {{ car.price }}</td>
+                  <td hidden><input type="text" hidden id="carimages_{{ car.car_id }}{{ car.stelnummer }}" value="{{ car.image_names }}"></td>
+                </tr>
               {% endfor %}
             {% else %}
             <tr>
@@ -96,220 +92,289 @@
 
 
       <!-- Pagination Start -->
-
       <div class="card-body pb-0">
         {% if page_obj.paginator.num_pages > 1 %}
-        <nav aria-label="Page navigation">
+          <nav aria-label="Page navigation">
             <ul class="pagination justify-content-center">
-                {# First and Previous Buttons #}
-                {% if page_obj.has_previous %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page=1&{{ get_params }}" aria-label="First">
-                            &laquo;&laquo;&nbsp;First
-                        </a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}&{{ get_params }}" aria-label="Previous">
-                            &laquo;&nbsp;Previous
-                        </a>
-                    </li>
-                {% endif %}
+              <!-- First and Previous Buttons -->
+              {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1&{{ get_params }}" aria-label="First">
+                        &laquo;&laquo;&nbsp;First
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}&{{ get_params }}" aria-label="Previous">
+                        &laquo;&nbsp;Previous
+                    </a>
+                </li>
+              {% endif %}
     
-                {# Page Number Links #}
-                {% for num in page_obj.paginator.page_range %}
-                    {% if page_obj.number <= 5 %}
-                        {% if num <= 10 %}
-                            <li class="page-item {% if page_obj.number == num %}active{% endif %}">
-                                <a class="page-link" href="?page={{ num }}&{{ get_params }}">{{ num }}</a>
-                            </li>
-                        {% elif num == 11 %}
-                            <li class="page-item disabled"><span class="page-link">...</span></li>
-                        {% endif %}
-                    {% elif page_obj.number > 5 and page_obj.number < page_obj.paginator.num_pages|add:"-5" %}
-                        {% if num == page_obj.number|add:"-5" %}
-                            <li class="page-item disabled"><span class="page-link">...</span></li>
-                        {% endif %}
-                        {% if num >= page_obj.number|add:"-4" and num <= page_obj.number|add:"4" %}
-                            <li class="page-item {% if page_obj.number == num %}active{% endif %}">
-                                <a class="page-link" href="?page={{ num }}&{{ get_params }}">{{ num }}</a>
-                            </li>
-                        {% endif %}
-                        {% if num == page_obj.number|add:"5" %}
-                            <li class="page-item disabled"><span class="page-link">...</span></li>
-                        {% endif %}
-                    {% else %}
-                        {% if num >= page_obj.paginator.num_pages|add:"-9" %}
-                            <li class="page-item {% if page_obj.number == num %}active{% endif %}">
-                                <a class="page-link" href="?page={{ num }}&{{ get_params }}">{{ num }}</a>
-                            </li>
-                        {% elif num == page_obj.paginator.num_pages|add:"-10" %}
-                            <li class="page-item disabled"><span class="page-link">...</span></li>
-                        {% endif %}
+              <!-- Page Number Links -->
+              {% for num in page_obj.paginator.page_range %}
+                  {% if page_obj.number <= 5 %}
+                    {% if num <= 10 %}
+                      <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                        <a class="page-link" href="?page={{ num }}&{{ get_params }}">{{ num }}</a>
+                      </li>
+                    {% elif num == 11 %}
+                      <li class="page-item disabled"><span class="page-link">...</span></li>
                     {% endif %}
-                {% endfor %}
+                  {% elif page_obj.number > 5 and page_obj.number < page_obj.paginator.num_pages|add:"-5" %}
+                      {% if num == page_obj.number|add:"-5" %}
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                      {% endif %}
+                      {% if num >= page_obj.number|add:"-4" and num <= page_obj.number|add:"4" %}
+                        <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                          <a class="page-link" href="?page={{ num }}&{{ get_params }}">{{ num }}</a>
+                        </li>
+                      {% endif %}
+                      {% if num == page_obj.number|add:"5" %}
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                      {% endif %}
+                  {% else %}
+                      {% if num >= page_obj.paginator.num_pages|add:"-9" %}
+                        <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                          <a class="page-link" href="?page={{ num }}&{{ get_params }}">{{ num }}</a>
+                        </li>
+                      {% elif num == page_obj.paginator.num_pages|add:"-10" %}
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                      {% endif %}
+                  {% endif %}
+              {% endfor %}
     
-                {# Next and Last Buttons #}
-                {% if page_obj.has_next %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.next_page_number }}&{{ get_params }}" aria-label="Next">
-                            Next&nbsp;&raquo;
-                        </a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&{{ get_params }}" aria-label="Last">
-                            Last&nbsp;&raquo;&raquo;
-                        </a>
-                    </li>
-                {% endif %}
+              <!-- Next and Last Buttons -->
+              {% if page_obj.has_next %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ page_obj.next_page_number }}&{{ get_params }}" aria-label="Next">
+                    Next&nbsp;&raquo;
+                  </a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&{{ get_params }}" aria-label="Last">
+                    Last&nbsp;&raquo;&raquo;
+                  </a>
+                </li>
+              {% endif %}
             </ul>
-        </nav>
+          </nav>
         {% endif %}
+      </div>
+      <!-- Pagination End -->
     </div>
-    <!-- Pagination End -->
-
-
-
-    </div>
-
+    <!-- Card End -->
   </div>
+  <!-- Col-9 End -->
 
   <div class="col">
     <div class="card">
-      <div class="card-header bg-info">
-        Car Images
-      </div>
+      <div class="card-header bg-info text-center fw-bold">Car Images</div>
       <div class="card-body p-1 overflow-auto" style="max-height:calc(100vh - 180px)" id="selected_car_images">
-        <h5 id="all_image_list_header" class="card-title">Click a car to view the Car Images</h5>
+        <h5 id="all_image_list_header" class="card-title" style="text-align: center;">Click on a car to view its images.</h5>
       </div>
     </div>
-
   </div>
 
 </div>
 
 
-<div class="offcanvas offcanvas-start custom-offcanvas-width" tabindex="-1" id="offcanvasExample"
-  aria-labelledby="offcanvasExampleLabel">
+<div class="offcanvas offcanvas-start custom-offcanvas-width" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
   <div class="offcanvas-header bg-primary text-white">
     <h5 class="offcanvas-title" id="offcanvasExampleLabel">Filter Options</h5>
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
   <div class="offcanvas-body" style="padding-right: 0px !important;">
-    <form id="filter-form" method="get">
-      
-      <div class="mb-3">
-        <label for="filterby_datefrom" class="form-label">Registrering From:</label>
-        <input type="text" 
-               id="filterby_datefrom" 
-               name="filterby_datefrom" 
-               class="form-control form-control-sm setmaxw" 
-               maxlength="4" 
-               value="{{ selected_date_from }}"
-               oninput="this.value = this.value.replace(/\D/g, ''); if (this.value === '0') this.value = '';">
-              </div>
+    
+  <form id="filter-form" method="get">  
+    
+    <!-- <div class="mb-3">
+      <label for="filterby_datefrom" class="form-label">Registrering From:</label>
+      <input 
+        type="text" 
+        id="filterby_datefrom" 
+        name="filterby_datefrom" 
+        class="form-control form-control-sm setmaxw" 
+        maxlength="4" 
+        value="{{ selected_date_from }}"
+        oninput="this.value = this.value.replace(/\D/g, ''); if (this.value === '0') this.value = '';">
+    </div>
     
     <div class="mb-3">
-        <label for="filterby_dateto" class="form-label">Registrering To:</label>
-        <input type="text" 
-               id="filterby_dateto" 
-               name="filterby_dateto" 
-               class="form-control form-control-sm setmaxw" 
-               maxlength="4" 
-               value="{{ selected_date_to }}"
-               oninput="this.value = this.value.replace(/\D/g, ''); if (this.value === '0') this.value = '';">
-              </div>
+      <label for="filterby_dateto" class="form-label">Registrering To:</label>
+      <input type="text" 
+        id="filterby_dateto" 
+        name="filterby_dateto" 
+        class="form-control form-control-sm setmaxw" 
+        maxlength="4" 
+        value="{{ selected_date_to }}"
+        oninput="this.value = this.value.replace(/\D/g, ''); if (this.value === '0') this.value = '';">
+    </div> -->
 
-      <div class="">
-        <label for="filterby_brand" class="form-label">Select Brands:</label>
-      </div>
-      <div class="mb-3">
-        <select class="form-select filter_cars setmaxw" name="carbrands" multiple="multiple" id="filterby_brand">
-          <!-- {% for brand in brand_column %}
-          <option value="{{brand}}" {% if brand in selected_brands %} selected {% endif %}>{{brand}}</option>
-          {% endfor %} -->
-        </select>
-      </div>
+    <div class="input-group input-group-sm mb-3 setmaxw">
+      <span class="input-group-text" id="inputGroup-sizing-sm">Registrering From</span>
+      <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"
+        id="filterby_datefrom" 
+        name="filterby_datefrom"
+        value="{{ selected_date_from }}"
+        oninput="this.value = this.value.replace(/\D/g, ''); if (this.value === '0') this.value = '';">
+    </div>
+    <div class="input-group input-group-sm mb-3 setmaxw">
+      <span class="input-group-text" id="inputGroup-sizing-sm">Registrering To&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+      <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"
+        id="filterby_dateto" 
+        name="filterby_dateto"
+        value="{{ selected_date_to }}"
+        oninput="this.value = this.value.replace(/\D/g, ''); if (this.value === '0') this.value = '';">
+    </div>
 
-      <div class="">
-        <label for="filterby_model" class="form-label">Select Model:</label>
-      </div>
-      <div class="mb-3">
-        <select class="form-select filter_cars" name="carmodels" multiple="multiple" id="filterby_model">
+    <div class="">
+      <label for="filterby_brand" class="form-label">Select Brands:</label>
+    </div>
+    <div class="mb-3">
+      <select class="form-select filter_cars setmaxw" name="carbrands" multiple="multiple" id="filterby_brand">
+        <!-- {% for brand in brand_column %}
+        <option value="{{brand}}" {% if brand in selected_brands %} selected {% endif %}>{{brand}}</option>
+        {% endfor %} -->
+      </select>
+    </div>
 
-        </select>
-      </div>
+    <div class="">
+      <label for="filterby_model" class="form-label">Select Model:</label>
+    </div>
+    <div class="mb-3">
+      <select class="form-select filter_cars" name="carmodels" multiple="multiple" id="filterby_model">
+      </select>
+    </div>
 
-      <div class="">
-        <label for="filterby_fuel_type" class="form-label">Select Fuel Type:</label>
-      </div>
-      <div class="mb-3">
-        <select class="form-select filter_cars" name="carfueltypes" multiple="multiple" id="filterby_fuel_type">
-        </select>
-      </div>
+    <div class="">
+      <label for="filterby_fuel_type" class="form-label">Select Fuel Type:</label>
+    </div>
+    <div class="mb-3">
+      <select class="form-select filter_cars" name="carfueltypes" multiple="multiple" id="filterby_fuel_type">
+      </select>
+    </div>
 
-      <div class="">
-        <label for="filterby_transimision" class="form-label">Select Transimision:</label>
-      </div>
-      <div class="mb-3">
-        <select class="form-select filter_cars" name="cartransimisions" multiple="multiple" id="filterby_transimision">
+    <div class="">
+      <label for="filterby_transimision" class="form-label">Select Transimision:</label>
+    </div>
+    <div class="mb-3">
+      <select class="form-select filter_cars" name="cartransimisions" multiple="multiple" id="filterby_transimision">
+      </select>
+    </div>
 
-        </select>
-      </div>
-
-      <div class="mb-3">
-        <label for="filterby_kmfrom" class="form-label">KM From:</label>
-        <input type="text" 
-               class="form-control form-control-sm setmaxw" 
-               id="filterby_kmfrom" 
-               name="filterby_kmfrom"
-               value="{{ selected_km_from }}"
-               oninput="this.value = this.value.replace(/\D/g, ''); if (this.value === '0') this.value = '';">
-              </div>
+    <!-- <div class="mb-3">
+      <label for="filterby_kmfrom" class="form-label">KM From:</label>
+      <input type="text" 
+        class="form-control form-control-sm setmaxw" 
+        id="filterby_kmfrom" 
+        name="filterby_kmfrom"
+        value="{{ selected_km_from }}"
+        oninput="this.value = this.value.replace(/\D/g, ''); if (this.value === '0') this.value = '';">
+    </div>
     
     <div class="mb-3">
-        <label for="filterby_kmto" class="form-label">KM To:</label>
-        <input type="text" 
-               class="form-control form-control-sm setmaxw"  
-               id="filterby_kmto" 
-               name="filterby_kmto"
-               value="{{ selected_km_to }}"
-               oninput="this.value = this.value.replace(/\D/g, ''); if (this.value === '0') this.value = '';">
-              </div>
-    
+      <label for="filterby_kmto" class="form-label">KM To:</label>
+      <input type="text" 
+        class="form-control form-control-sm setmaxw"  
+        id="filterby_kmto" 
+        name="filterby_kmto"
+        value="{{ selected_km_to }}"
+        oninput="this.value = this.value.replace(/\D/g, ''); if (this.value === '0') this.value = '';">
+    </div> -->
+
+    <div class="input-group input-group-sm mb-3 setmaxw">
+      <span class="input-group-text" id="inputGroup-sizing-sm">Kilometer From</span>
+      <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"
+        id="filterby_kmfrom" 
+        name="filterby_kmfrom"
+        value="{{ selected_km_from }}"
+        oninput="this.value = this.value.replace(/\D/g, ''); if (this.value === '0') this.value = '';">
+    </div>
+    <div class="input-group input-group-sm mb-3 setmaxw">
+      <span class="input-group-text" id="inputGroup-sizing-sm">Kilometer To&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+      <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"
+        id="filterby_kmto" 
+        name="filterby_kmto"
+        value="{{ selected_km_to }}"
+        oninput="this.value = this.value.replace(/\D/g, ''); if (this.value === '0') this.value = '';">
+    </div>
 
 
-      <div class="">
-        <label for="filterby_registeringsafgift" class="form-label">Select Registeringsafgift:</label>
-      </div>
-      <div class="mb-3">
-        <select class="form-select filter_cars" name="registeringsafgift" multiple="multiple"
-          id="filterby_registeringsafgift">
-          {% for registeringsafgift in registeringsafgift_column %}
+    <div class="">
+      <label for="filterby_registeringsafgift" class="form-label">Select Registeringsafgift:</label>
+    </div>
+    <div class="mb-3">
+      <select class="form-select filter_cars" name="registeringsafgift" multiple="multiple" id="filterby_registeringsafgift">
+        {% for registeringsafgift in registeringsafgift_column %}
           <option value="{{registeringsafgift}}" {% if registeringsafgift in selected_registeringsafgift %} selected {% endif %}>
-            {{registeringsafgift}}</option>
-          {% endfor %}
-        </select>
-      </div>
+            {{registeringsafgift}}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
 
-      <div class="">
-        <label for="filterby_tax" class="form-label">Select Tax(+moms or inkl):</label>
-      </div>
-      <div class="mb-3">
-        <select class="form-select filter_cars" name="filter_tax" multiple="multiple" id="filterby_tax">
-          {% for filter_tax in filter_tax_column %}
+    <div class="">
+      <label for="filterby_tax" class="form-label">Select Tax(+moms or inkl):</label>
+    </div>
+    <div class="mb-3">
+      <select class="form-select filter_cars" name="filter_tax" multiple="multiple" id="filterby_tax">
+        {% for filter_tax in filter_tax_column %}
           <option value="{{filter_tax}}" {% if filter_tax in selected_filter_tax %} selected {% endif %}>
-            {{filter_tax}}</option>
-          {% endfor %}
-        </select>
-      </div>
+            {{filter_tax}}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- New Filter for  -->
+    <div class="input-group input-group-sm mb-3 setmaxw">
+      <span class="input-group-text" id="inputGroup-sizing-sm">Horsepower From</span>
+      <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"
+        id="filterby_hpfrom" 
+        name="filterby_hpfrom"
+        value="{{ selected_hpfrom }}"
+        oninput="this.value = this.value.replace(/\D/g, ''); if (this.value === '0') this.value = '';">
+    </div>
+    <div class="input-group input-group-sm mb-3 setmaxw">
+      <span class="input-group-text" id="inputGroup-sizing-sm">Horsepower To&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+      <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"
+        id="filterby_hpto" 
+        name="filterby_hpto"
+        value="{{ selected_hpto }}"
+        oninput="this.value = this.value.replace(/\D/g, ''); if (this.value === '0') this.value = '';">
+    </div>
+
+    <!-- <div class="mb-3">
+      <label for="filterby_hpfrom" class="form-label">Horsepower From:</label>
+      <input type="text" 
+        class="form-control form-control-sm setmaxw"  
+        id="filterby_hpfrom" 
+        name="filterby_hpfrom"
+        value="{{ selected_hpfrom }}"
+        oninput="this.value = this.value.replace(/\D/g, ''); if (this.value === '0') this.value = '';">
+    </div>
+
+    <div class="mb-3">
+      <label for="filterby_hpto" class="form-label">Horsepower To:</label>
+      <input type="text" 
+        class="form-control form-control-sm setmaxw"  
+        id="filterby_hpto" 
+        name="filterby_hpto"
+        value="{{ selected_hpto }}"
+        oninput="this.value = this.value.replace(/\D/g, ''); if (this.value === '0') this.value = '';">
+    </div> -->
+
+    
 
 
-      <div class="d-flex justify-content-between">
-        <!-- <a href="{% url 'car_list' %}" class="btn btn-warning btn-sm">Clear Filter</a> -->
 
-        <button type="submit" class="btn btn-primary btn-sm" id="applyFilterBtn">Apply Filter</button>
+    <div class="d-flex justify-content-between w-100">
+      <!-- <a href="{% url 'car_list' %}" class="btn btn-warning btn-sm">Clear Filter</a> -->
+      <button type="submit" class="btn btn-primary btn-sm flex-grow-1 setmaxw" id="applyFilterBtn">
+        Apply Filter
+      </button>
+    </div>
 
-      </div>
     </form>
   </div>
 </div>
@@ -322,58 +387,48 @@
   <textarea id="selectedTransJson" style="display: none;">{{ selected_transimisions|safe }}</textarea>
 </div>
 
+
 {% endblock %}
-
-
 {% block extra_js %}
 
 <script>
-
-
-
-
-  $(document).ready(function() {
-      var carTable = $('#cartable_datatable');
-      
-      // Check if there are rows inside <tbody> (excluding the "No cars found" row)
-      if (carTable.find('tbody tr').length > 1 || carTable.find('tbody tr td').length > 1) {
-          carTable.DataTable({
-              paging: false,        // Disable pagination
-              searching: false,     // Disable search box
-              info: true,           // Show "Showing X of Y entries"
-              pageLength: -1,       // Show all items
-              lengthChange: false,  // Hide the "Show X entries" dropdown
-              dom: 't',
-              order: [], // Disable initial sorting
-          });
-      }
-  });
-
-
-
   $(document).ready(function () {
+    var carTable = $('#cartable_datatable');
+      
+    // Check if there are rows inside <tbody> (excluding the "No cars found" row)
+    if (carTable.find('tbody tr').length > 1 || carTable.find('tbody tr td').length > 1) {
+      carTable.DataTable({
+        paging: false,        // Disable pagination
+        searching: false,     // Disable search box
+        info: true,           // Show "Showing X of Y entries"
+        pageLength: -1,       // Show all items
+        lengthChange: false,  // Hide the "Show X entries" dropdown
+        dom: 't',
+        order: [], // Disable initial sorting
+      });
+    }
 
     //Multiselect for two diff new filter.
     $('#filterby_registeringsafgift').multiSelect();
     $('#filterby_tax').multiSelect();
     
     $('#applyFilterBtn').on('click', function(event){
-            var fromValue = $('#filterby_datefrom').val();
-            var toValue = $('#filterby_dateto').val();
+      var fromValue = $('#filterby_datefrom').val();
+      var toValue = $('#filterby_dateto').val();
 
-            // Check if 'from' field is invalid (not a valid 4-digit number or less than 1000)
-            if (fromValue && (fromValue.length !== 4 || !/^\d{4}$/.test(fromValue) )) {
-                alert("Please enter a valid 4-digit year.");
-                event.preventDefault();
-                return; // Stop further checks
-            }
+      // Check if 'from' field is invalid (not a valid 4-digit number or less than 1000)
+      if (fromValue && (fromValue.length !== 4 || !/^\d{4}$/.test(fromValue) )) {
+        alert("Please enter a valid 4-digit year.");
+        event.preventDefault();
+        return; // Stop further checks
+      }
 
-            // Check if 'to' field is invalid (not a valid 4-digit number or less than 1000)
-            if (toValue && (toValue.length !== 4 || !/^\d{4}$/.test(toValue))) {
-                alert("Please enter a valid 4-digit year.");
-                event.preventDefault();
-            }
-        });
+      // Check if 'to' field is invalid (not a valid 4-digit number or less than 1000)
+      if (toValue && (toValue.length !== 4 || !/^\d{4}$/.test(toValue))) {
+        alert("Please enter a valid 4-digit year.");
+        event.preventDefault();
+      }
+    });
 
     const carData = JSON.parse($('#carDataJson').val());
     const allBrands = [...new Set(carData.map(c => c.brand))];

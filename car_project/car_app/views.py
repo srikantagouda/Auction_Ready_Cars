@@ -23,7 +23,21 @@ def car_list(request):
     
     date_from = request.GET.get('filterby_datefrom')
     date_to = request.GET.get('filterby_dateto')
-    
+
+    #New Filter for Horsepower
+    hp_from = request.GET.get('filterby_hpfrom')
+    hp_to = request.GET.get('filterby_hpto')
+    if hp_from:
+        try:
+            hp_from = int(hp_from)
+        except:
+            hp_from = None
+    if hp_to:
+        try:
+            hp_to = int(hp_to)
+        except:
+            hp_to = None
+
     # Convert the date strings to datetime objects
     if date_from:
         #date_from = datetime.strptime(date_from, '%Y-%m-%d').date()
@@ -102,6 +116,15 @@ def car_list(request):
         filter_params['kilometer__lte'] = selected_km_to
         #cars = cars.filter(kilometer__lte=selected_km_to)
 
+    #New Filter for Horsepower//horsepower
+    if hp_from and hp_to:
+        filter_params['horsepower__range'] = (hp_from, hp_to)
+    elif hp_from:
+        filter_params['horsepower__gte'] = hp_from
+    elif hp_to:
+        filter_params['horsepower__lte'] = hp_to
+
+
     db1_cars = Car.objects.using('default').filter(**filter_params).order_by('-date','-car_id')
     db2_cars = Car.objects.using('db2').filter(**filter_params).order_by('-date','-car_id')
 
@@ -169,6 +192,9 @@ def car_list(request):
         'selected_km_to' : request.GET.get('filterby_kmto',''),
         'selected_date_from': request.GET.get('filterby_datefrom',''),
         'selected_date_to':request.GET.get('filterby_dateto',''),
+
+        'selected_hpfrom':request.GET.get('filterby_hpfrom',''),
+        'selected_hpto':request.GET.get('filterby_hpto',''),
 
         'get_params' : get_params.urlencode()
     })
