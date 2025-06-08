@@ -16,3 +16,4 @@ __pycache__/
 
 # Database files
 /car_project/*.sqlite3
+car_project/db.sqlite3
