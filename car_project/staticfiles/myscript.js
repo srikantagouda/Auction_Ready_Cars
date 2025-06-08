@@ -45,9 +45,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (count > 0) {
                         const avgPrice = (totalPrice / count).toFixed(0);
                         const avgKm = (totalKm / count).toFixed(0);
-                        avgDisplay.innerText = `Avg Price= € ${avgPrice} | KM= ${avgKm}`;
+                        avgDisplay.innerText = `Avg Price= € ${avgPrice} | Avg KM= ${avgKm}`;
                     } else {
-                        avgDisplay.innerText = "Avg Price= € 0 | KM= 0";
+                        avgDisplay.innerText = "Avg Price= € 0 | Avg KM= 0";
                     }
 
                     // if (count > 0) {
