@@ -15,6 +15,7 @@ def car_list(request):
     #Get Selected Filters.
     selected_brands = request.GET.getlist('carbrands')
     selected_models = request.GET.getlist('carmodels')
+    selected_titles = request.GET.getlist('cartitle')
     selected_fuel_types = request.GET.getlist('carfueltypes')
     selected_transimisions = request.GET.getlist('cartransimisions')
 
@@ -77,6 +78,10 @@ def car_list(request):
     if selected_models:
         filter_params['model__in'] = selected_models
         #cars = cars.filter(model__in=selected_models)
+    
+    if selected_titles:
+        filter_params['tit__in'] = selected_titles
+    
     if selected_fuel_types:
         filter_params['fuel_type__in'] = selected_fuel_types
         #cars = cars.filter(fuel_type__in=selected_fuel_types)
@@ -149,11 +154,12 @@ def car_list(request):
     registeringsafgift_column = Car.objects.values_list('registeringsafgift', flat=True).distinct()
     filter_tax_column = Car.objects.values_list('tax_moms_or_inkl', flat=True).distinct()
 
-    car_data = list(Car.objects.values('brand', 'model', 'fuel_type','transimision').distinct().order_by('brand', 'model'))
+    car_data = list(Car.objects.values('brand', 'model', 'tit' ,'fuel_type','transimision').distinct().order_by('brand', 'model'))
     car_data_json = json.dumps(car_data)
 
     selected_brands = json.dumps(selected_brands)
     selected_models = json.dumps(selected_models)
+    selected_titles = json.dumps(selected_titles)
     selected_fuel_types = json.dumps(selected_fuel_types)
     selected_transimisions = json.dumps(selected_transimisions)
 
@@ -183,6 +189,7 @@ def car_list(request):
 
         'selected_brands' : selected_brands,
         'selected_models' : selected_models,
+        'selected_titles' : selected_titles,
         'selected_fuel_types' : selected_fuel_types,
         'selected_transimisions' : selected_transimisions,
         
