@@ -199,6 +199,7 @@ def car_list(request):
         'get_params' : get_params.urlencode()
     })
 
+@login_required
 def car_detail(request, car_id):
     car = Car.objects.get(pk=car_id)
     images = car.image_names.split(',')

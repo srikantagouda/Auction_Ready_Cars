@@ -403,8 +403,8 @@
         info: true,           // Show "Showing X of Y entries"
         pageLength: -1,       // Show all items
         lengthChange: false,  // Hide the "Show X entries" dropdown
-        dom: 't',
-        order: [], // Disable initial sorting
+        dom: 't',             //'t' = the table element (just the rows and columns, no search box, no pagination, no length menu, etc.)
+        order: [],            // Disable initial sorting
       });
     }
 
@@ -430,8 +430,11 @@
       }
     });
 
+    //------------------------------------------------------------------------------------
     const carData = JSON.parse($('#carDataJson').val());
     const allBrands = [...new Set(carData.map(c => c.brand))];
+
+    //------------------------------------------------------------------------------------
     const selectedBrands = JSON.parse($('#selectedBrandsJson').val());
 
     function initFilterByBrand() {

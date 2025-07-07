@@ -17,3 +17,6 @@ __pycache__/
 # Database files
 /car_project/*.sqlite3
 car_project/db.sqlite3
+/car_project/db_JayPatkar/
+
+/car_project_Backup - 7 July 2025/*

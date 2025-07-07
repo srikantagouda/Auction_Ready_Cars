@@ -45,6 +45,8 @@ class Car(models.Model):
     image_url_4 = models.CharField(max_length=255, null=True, blank=True)
     image_url_5 = models.CharField(max_length=255, null=True, blank=True)
 
+    tit = models.CharField(max_length=255, null=True, blank=True)
+
     # Add other car details as needed
 
 #class Image(models.Model):
