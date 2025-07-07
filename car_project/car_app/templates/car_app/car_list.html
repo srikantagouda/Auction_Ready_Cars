@@ -32,6 +32,7 @@
               <th style="width: 1%;">Registrering</th>
               <th style="width: 1%;">Brand</th>
               <th style="width: 1%;">Model</th>
+              <th style="width: 1%;">Title</th>
               <th style="width: 1%;">Horsepower</th>
               <th style="width: 1%;">Fuel Type</th>
               <th style="width: 1%;">Transimision</th>
@@ -61,6 +62,7 @@
                   <td class="text-nowrap" data-order="{{ car.registrering|date:"Y-m-d" }}">{{ car.registrering|date:"M d, Y" }}</td>
                   <td>{{ car.brand }}</td>
                   <td>{{ car.model }}</td>
+                  <td>{{ car.tit }}</td>
                   <td>{{ car.horsepower }}</td>
                   <td>{{ car.fuel_type }}</td>
                   <td>{{ car.transimision }}</td>
@@ -179,7 +181,7 @@
 
 
 <div class="offcanvas offcanvas-start custom-offcanvas-width" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
-  <div class="offcanvas-header bg-primary text-white">
+  <div class="offcanvas-header bg-primary text-white pb-2 pt-2">
     <h5 class="offcanvas-title" id="offcanvasExampleLabel">Filter Options</h5>
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
@@ -245,6 +247,16 @@
       <select class="form-select filter_cars" name="carmodels" multiple="multiple" id="filterby_model">
       </select>
     </div>
+
+    <!-- Added on 7th July 2025 -->
+    <div class="">
+      <label for="filterby_title" class="form-label">Select Title:</label>
+    </div>
+    <div class="mb-3">
+      <select class="form-select filter_cars" name="cartitles" multiple="multiple" id="filterby_title">
+      </select>
+    </div>
+
 
     <div class="">
       <label for="filterby_fuel_type" class="form-label">Select Fuel Type:</label>
@@ -383,6 +395,7 @@
   <textarea id="carDataJson" style="display: none;">{{ car_data_json|safe }}</textarea>
   <textarea id="selectedBrandsJson" style="display: none;">{{ selected_brands|safe }}</textarea>
   <textarea id="selectedModelsJson" style="display: none;">{{ selected_models|safe }}</textarea>
+  <textarea id="selectedTitlesJson" style="display: none;">{{ selected_titles|safe }}</textarea>
   <textarea id="selectedFuelsJson" style="display: none;">{{ selected_fuel_types|safe }}</textarea>
   <textarea id="selectedTransJson" style="display: none;">{{ selected_transimisions|safe }}</textarea>
 </div>
@@ -433,8 +446,6 @@
     //------------------------------------------------------------------------------------
     const carData = JSON.parse($('#carDataJson').val());
     const allBrands = [...new Set(carData.map(c => c.brand))];
-
-    //------------------------------------------------------------------------------------
     const selectedBrands = JSON.parse($('#selectedBrandsJson').val());
 
     function initFilterByBrand() {
@@ -462,7 +473,8 @@
       const uniqueModels = [...new Set(relatedModels)];
       const $modelSelect = $('#filterby_model');
 
-      $('#filterby_fuel_type').html('');
+      $('#filterby_title').html('');
+      //$('#filterby_fuel_type').html('');
       $modelSelect.html(''); // Clear previous options
 
       uniqueModels.forEach(model => {
@@ -475,8 +487,37 @@
     }
     initFilterbyModel();
     //------------------------------------------------------------------------------------
+    //Added on 7th July 2025 for adding a new filter after Model
+    const selectedTitles = JSON.parse($('#selectedTitlesJson').val());
+    function updateTitles() {
 
+      // Filter car data based on selected brands and models
+      const relatedTitles = carData
+        .filter(car =>
+          selectedBrands.includes(car.brand) &&
+          selectedModels.includes(car.model)
+        )
+        .map(car => car.tit);
 
+      const uniqueTitles = [...new Set(relatedTitles)];
+
+      const $titleSelect = $('#filterby_title');
+      $titleSelect.html('');
+
+      // Append new options
+      uniqueTitles.forEach(title => {
+        const isSelected = selectedTitles.includes(title) ? 'selected' : '';
+        $titleSelect.append(`<option value="${title}" ${isSelected}>${title}</option>`);
+      });
+
+      // Rebuild or reinit multiselect
+      $('#filterby_title').multiSelect('unload');
+      $('#filterby_title').multiSelect();
+    }
+    updateTitles();
+    // UPDATE END
+
+    //------------------------------------------------------------------------------------
     const selectedFuels = JSON.parse($('#selectedFuelsJson').val());
     function updateFuelTypes() {
 
@@ -484,7 +525,8 @@
       const relatedFuels = carData
         .filter(car =>
           selectedBrands.includes(car.brand) &&
-          selectedModels.includes(car.model)
+          selectedModels.includes(car.model) &&
+          selectedTitles.includes(car.tit)
         )
         .map(car => car.fuel_type);
 
@@ -514,6 +556,7 @@
         .filter(car =>
           selectedBrands.includes(car.brand) &&
           selectedModels.includes(car.model) &&
+          selectedTitles.includes(car.tit) &&
           selectedFuels.includes(car.fuel_type)
         )
         .map(car => car.transimision);
@@ -544,30 +587,57 @@
 
       const uniqueModels = [...new Set(filteredModels)];
       $('#filterby_model').html('');
+      $('#filterby_title').html('');
       $('#filterby_fuel_type').html('');
       $('#filterby_transimision').html('');
 
       uniqueModels.forEach(m => $('#filterby_model').append(`<option value="${m}">${m}</option>`));
 
+      $('#filterby_title').multiSelect('unload');
+      $('#filterby_title').multiSelect();
       $('#filterby_fuel_type').multiSelect('unload');
       $('#filterby_fuel_type').multiSelect();
       $('#filterby_transimision').multiSelect('unload');
       $('#filterby_transimision').multiSelect();
 
       $('#filterby_model').trigger('change');
+      $('#filterby_title').trigger('change');
       $('#filterby_fuel_type').trigger('change');
       $('#filterby_transimision').trigger('change');
 
     });
 
     //------------------------------------------------------------------------------------
-
+    //Added on 7th July 2025 for adding a new filter after Model
     $('#filterby_model').on('change', function () {
       const NewselectedBrands = $('#filterby_brand').val();
       const Newselectedmodels = $(this).val();
 
-      const filteredFueltypes = carData
+      const filteredTitles = carData
         .filter(car => Newselectedmodels.includes(car.model) && NewselectedBrands.includes(car.brand))
+        .map(car => car.tit);
+
+      const uniqueTitles = [...new Set(filteredTitles)];
+      $('#filterby_title').html('');
+
+      uniqueTitles.forEach(m => $('#filterby_title').append(`<option value="${m}">${m}</option>`));
+
+      $('#filterby_title').multiSelect('unload');
+      $('#filterby_title').multiSelect();
+
+      $('#filterby_title').trigger('change');
+
+    });
+
+    // Update ned to update the title select
+
+    $('#filterby_title').on('change', function () {
+      const NewselectedBrands = $('#filterby_brand').val();
+      const Newselectedmodels = $('#filterby_model').val();
+      const Newselectedtitles = $(this).val();
+
+      const filteredFueltypes = carData
+        .filter(car => Newselectedmodels.includes(car.model) && NewselectedBrands.includes(car.brand) && Newselectedtitles.includes(car.tit))
         .map(car => car.fuel_type);
 
       const uniqueFueltypes = [...new Set(filteredFueltypes)];

@@ -15,7 +15,7 @@ def car_list(request):
     #Get Selected Filters.
     selected_brands = request.GET.getlist('carbrands')
     selected_models = request.GET.getlist('carmodels')
-    selected_titles = request.GET.getlist('cartitle')
+    selected_titles = request.GET.getlist('cartitles')
     selected_fuel_types = request.GET.getlist('carfueltypes')
     selected_transimisions = request.GET.getlist('cartransimisions')
 
