@@ -9,11 +9,11 @@ $("#searchbox").on("input change", function () {
 
 // table-interactions.js
 // table-interactions.js
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const rows = document.querySelectorAll('tbody.table_filter tr');
     rows.forEach(row => {
-        row.addEventListener('click', function() {
-            
+        row.addEventListener('click', function () {
+
             if (true) {
                 //alert("You clicked on a row!");
                 const cellIndex = Array.from(this.cells).indexOf(event.target.closest('td'));
@@ -34,10 +34,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     let totalKm = 0;
                     let count = checkboxes.length;
 
+                    // checkboxes.forEach(cb => {
+                    //     totalPrice += parseFloat(cb.dataset.price);
+                    //     totalKm += parseFloat(cb.dataset.km);
+                    // });
+
                     checkboxes.forEach(cb => {
-                        totalPrice += parseFloat(cb.dataset.price);
-                        totalKm += parseFloat(cb.dataset.km);
+                        const price = parseFloat(cb.dataset.price.replace(/,/g, ''));
+                        const km = parseFloat(cb.dataset.km.replace(/,/g, ''));
+
+                        totalPrice += price;
+                        totalKm += km;
                     });
+
 
                     // alert(count);
                     // alert(`Total Price: € ${totalPrice.toFixed(0)} | Total KM: ${totalKm.toFixed(0)}`);
@@ -63,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
             }
-            
+
             // Remove 'selected-car' class from all rows
             rows.forEach(r => r.classList.remove('selected-car'));
             // Add 'selected-car' class to the clicked row
@@ -74,15 +83,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
             var currentid = this.id.split('_')[1];
             var imageUrlString = $('#carimages_' + currentid).val();
-            
+
             // Clear the image container
             $('#selected_car_images').empty();
 
             // Create img tags for each URL and append to the container
             // Split the string by commas
             var imageUrls = imageUrlString.split(',');
-            imageUrls.forEach(function(url) {
-                
+            imageUrls.forEach(function (url) {
+
                 // Set the image source
                 var imageUrl = `/media/${url}`;
                 //$('#imageContainer').empty().append(`<img src="${imageUrl}" class="img-fluid" alt="Car Image">`);
@@ -98,6 +107,6 @@ document.addEventListener('DOMContentLoaded', function() {
 //     $('.filter_cars').multiSelect();
 // });
 
-function showFullText(cell){
+function showFullText(cell) {
     cell.classList.toggle("expanded");
 }

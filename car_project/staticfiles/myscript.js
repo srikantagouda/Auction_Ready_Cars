@@ -34,9 +34,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     let totalKm = 0;
                     let count = checkboxes.length;
 
+                    // checkboxes.forEach(cb => {
+                    //     totalPrice += parseFloat(cb.dataset.price);
+                    //     totalKm += parseFloat(cb.dataset.km);
+                    // });
+
                     checkboxes.forEach(cb => {
-                        totalPrice += parseFloat(cb.dataset.price);
-                        totalKm += parseFloat(cb.dataset.km);
+                        const price = parseFloat(cb.dataset.price.replace(/,/g, ''));
+                        const km = parseFloat(cb.dataset.km.replace(/,/g, ''));
+
+                        totalPrice += price;
+                        totalKm += km;
                     });
 
                     // alert(count);
