@@ -404,10 +404,11 @@
 {% endblock %}
 {% block extra_js %}
 
+
 <script>
   $(document).ready(function () {
     var carTable = $('#cartable_datatable');
-      
+
     // Check if there are rows inside <tbody> (excluding the "No cars found" row)
     if (carTable.find('tbody tr').length > 1 || carTable.find('tbody tr td').length > 1) {
       carTable.DataTable({
@@ -424,13 +425,13 @@
     //Multiselect for two diff new filter.
     $('#filterby_registeringsafgift').multiSelect();
     $('#filterby_tax').multiSelect();
-    
-    $('#applyFilterBtn').on('click', function(event){
+
+    $('#applyFilterBtn').on('click', function (event) {
       var fromValue = $('#filterby_datefrom').val();
       var toValue = $('#filterby_dateto').val();
 
       // Check if 'from' field is invalid (not a valid 4-digit number or less than 1000)
-      if (fromValue && (fromValue.length !== 4 || !/^\d{4}$/.test(fromValue) )) {
+      if (fromValue && (fromValue.length !== 4 || !/^\d{4}$/.test(fromValue))) {
         alert("Please enter a valid 4-digit year.");
         event.preventDefault();
         return; // Stop further checks
@@ -525,8 +526,11 @@
       const relatedFuels = carData
         .filter(car =>
           selectedBrands.includes(car.brand) &&
-          selectedModels.includes(car.model) &&
-          selectedTitles.includes(car.tit)
+          selectedModels.includes(car.model)
+
+          // As per New request commented the below code to exclude the Titles filter to show the fuel type
+          // Date 10 Jul 2025
+          // && selectedTitles.includes(car.tit)
         )
         .map(car => car.fuel_type);
 
@@ -556,7 +560,9 @@
         .filter(car =>
           selectedBrands.includes(car.brand) &&
           selectedModels.includes(car.model) &&
-          selectedTitles.includes(car.tit) &&
+          // As per New request commented the below code to exclude the Titles filter to show the fuel type
+          // Date 10 Jul 2025
+          //selectedTitles.includes(car.tit) &&
           selectedFuels.includes(car.fuel_type)
         )
         .map(car => car.transimision);
@@ -626,6 +632,22 @@
       $('#filterby_title').multiSelect();
 
       $('#filterby_title').trigger('change');
+
+      //10 Jul 2025 - Upon Filter the Model update the Fuel types as well.
+      const filteredFueltypes = carData
+        .filter(car => Newselectedmodels.includes(car.model) && NewselectedBrands.includes(car.brand))
+        .map(car => car.fuel_type);
+
+      const uniqueFueltypes = [...new Set(filteredFueltypes)];
+      $('#filterby_fuel_type').html('');
+
+      uniqueFueltypes.forEach(m => $('#filterby_fuel_type').append(`<option value="${m}">${m}</option>`));
+
+      $('#filterby_fuel_type').multiSelect('unload');
+      $('#filterby_fuel_type').multiSelect();
+
+
+      $('#filterby_fuel_type').trigger('change');
 
     });
 
